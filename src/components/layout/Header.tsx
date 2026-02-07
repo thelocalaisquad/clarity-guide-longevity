@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import BannerAd from "./BannerAd";
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -16,21 +17,31 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/98 backdrop-blur-sm">
-      <div className="editorial-container flex h-20 items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="font-serif text-xl font-semibold tracking-tight text-foreground">
-          Longevity Channel 1
-        </Link>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background">
+      {/* Banner ad */}
+      <BannerAd />
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-10 md:flex">
+      {/* Wordmark */}
+      <div className="editorial-container flex items-center justify-center py-5 md:py-6">
+        <Link
+          to="/"
+          className="font-serif text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
+        >
+          LONGEVITY CHANNEL 1
+        </Link>
+      </div>
+
+      <div className="h-px bg-border" />
+
+      {/* Nav row */}
+      <div className="editorial-container flex h-12 items-center justify-between md:justify-center">
+        <nav className="hidden items-center gap-8 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
               to={item.href}
               className={cn(
-                "editorial-label transition-colors hover:text-foreground",
+                "text-[0.7rem] font-semibold uppercase tracking-[0.18em] transition-colors hover:text-foreground",
                 location.pathname === item.href ||
                 (item.href !== "/" && location.pathname.startsWith(item.href))
                   ? "text-foreground"
@@ -52,7 +63,6 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Thin bottom rule */}
       <div className="h-px bg-border" />
 
       {/* Mobile nav */}
@@ -64,7 +74,7 @@ const Header = () => {
               to={item.href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                "block py-3 editorial-label transition-colors",
+                "block py-3 text-[0.7rem] font-semibold uppercase tracking-[0.18em] transition-colors",
                 location.pathname === item.href
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground"
