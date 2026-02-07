@@ -16,24 +16,24 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
-      <div className="editorial-container flex h-16 items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/98 backdrop-blur-sm">
+      <div className="editorial-container flex h-20 items-center justify-between">
         {/* Logo */}
         <Link to="/" className="font-serif text-xl font-semibold tracking-tight text-foreground">
           Longevity Channel 1
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-10 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
               to={item.href}
               className={cn(
-                "text-sm font-medium tracking-wide transition-colors hover:text-primary",
-                location.pathname === item.href || 
+                "editorial-label transition-colors hover:text-foreground",
+                location.pathname === item.href ||
                 (item.href !== "/" && location.pathname.startsWith(item.href))
-                  ? "text-primary"
+                  ? "text-foreground"
                   : "text-muted-foreground"
               )}
             >
@@ -48,23 +48,26 @@ const Header = () => {
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
+      {/* Thin bottom rule */}
+      <div className="h-px bg-border" />
+
       {/* Mobile nav */}
       {mobileOpen && (
-        <nav className="border-t border-border bg-background px-6 py-4 md:hidden">
+        <nav className="border-b border-border bg-background px-6 py-6 md:hidden">
           {navItems.map((item) => (
             <Link
               key={item.href}
               to={item.href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                "block py-3 text-sm font-medium tracking-wide transition-colors",
+                "block py-3 editorial-label transition-colors",
                 location.pathname === item.href
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-primary"
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {item.label}
