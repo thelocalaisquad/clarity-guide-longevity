@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-sauna.jpg";
 import redlightImage from "@/assets/editorial-redlight.jpg";
 import facilityImage from "@/assets/editorial-facility.jpg";
@@ -29,10 +28,10 @@ const sidebarItems = [
 const HeroIntro = () => (
   <section className="pt-8 pb-14 lg:pt-12 lg:pb-20 border-b border-border">
     <div className="editorial-container">
-      <div className="grid gap-8 lg:grid-cols-[1.3fr_0.7fr]">
+      <div className="grid gap-8 lg:grid-cols-[1.4fr_0.6fr]">
         {/* Featured article */}
         <Link to="/technologies/infrared-sauna" className="group block">
-          <div className="relative overflow-hidden rounded-sm aspect-[4/3]">
+          <div className="relative overflow-hidden rounded-sm aspect-[16/10]">
             <img
               src={heroImage}
               alt="Infrared sauna with warm natural light"
@@ -41,7 +40,7 @@ const HeroIntro = () => (
           </div>
           <div className="mt-5">
             <span className="editorial-label text-primary">Infrared Sauna</span>
-            <h2 className="mt-2 font-serif text-3xl font-semibold leading-[1.2] text-foreground md:text-[2.5rem] lg:text-[2.75rem]">
+            <h2 className="mt-2 font-serif text-3xl font-semibold leading-[1.15] text-foreground md:text-[2.5rem] lg:text-[2.75rem]">
               Everything You Need to Know About Infrared Saunas{" "}
               <em className="font-normal">Before</em> You Buy One
             </h2>
@@ -53,13 +52,13 @@ const HeroIntro = () => (
           </div>
         </Link>
 
-        {/* Sidebar — "NEW and NOW" style */}
+        {/* Sidebar */}
         <div>
           <h3 className="font-serif text-2xl font-semibold text-foreground md:text-3xl">
             NEW <em className="font-normal">and</em> NOW
           </h3>
           <div className="mt-5 space-y-1">
-            {sidebarItems.map((item, i) => (
+            {sidebarItems.map((item) => (
               <Link
                 key={item.slug}
                 to={`/technologies/${item.slug}`}
