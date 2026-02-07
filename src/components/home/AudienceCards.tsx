@@ -4,37 +4,31 @@ import wellnessImage from "@/assets/editorial-wellness.jpg";
 import facilityImage from "@/assets/editorial-facility.jpg";
 
 const AudienceCards = () => (
-  <section className="bg-card py-20 lg:py-28">
+  <section className="py-16 lg:py-24 bg-card border-b border-border">
     <div className="editorial-container">
-      <div className="text-center max-w-2xl mx-auto mb-14">
-        <span className="editorial-label">Our Audience</span>
-        <div className="editorial-divider mt-4 mx-auto" />
-        <h2 className="mt-6 font-serif text-3xl font-semibold text-foreground md:text-4xl">
-          Who this is for
-        </h2>
-      </div>
+      <h2 className="font-serif text-2xl font-semibold text-foreground md:text-3xl text-center mb-12">
+        WHO <em className="font-normal">this is for</em>
+      </h2>
 
-      <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
-        {/* Individuals — image-led card */}
-        <Link
-          to="/technologies"
-          className="group editorial-card flex flex-col"
-        >
-          <div className="relative h-48 overflow-hidden">
+      <div className="grid gap-5 md:grid-cols-2 max-w-5xl mx-auto">
+        {/* Individuals */}
+        <Link to="/technologies" className="group editorial-card flex flex-col">
+          <div className="relative h-56 overflow-hidden">
             <img
               src={wellnessImage}
-              alt="Personal wellness exploration"
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              alt="Personal wellness"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-600 group-hover:scale-[1.03]"
             />
           </div>
-          <div className="p-8 lg:p-9 flex flex-col flex-1">
+          <div className="p-7 lg:p-8">
             <span className="editorial-label text-primary">Individuals</span>
-            <h3 className="mt-3 font-serif text-xl font-semibold text-foreground">
-              Personal exploration
+            <h3 className="mt-2 font-serif text-xl font-semibold text-foreground leading-snug">
+              Personal Exploration
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground flex-1">
-              Clear, structured information about technologies you're considering —
-              without the sales pitch.
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Clear, structured information about technologies you're considering
+              — without the sales pitch. Understand what works, what doesn't,
+              and what to expect.
             </p>
             <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-primary group-hover:text-primary/80 transition-colors">
               Browse Technologies <ArrowRight size={14} />
@@ -42,26 +36,24 @@ const AudienceCards = () => (
           </div>
         </Link>
 
-        {/* Operators — image-led card */}
-        <Link
-          to="/business"
-          className="group editorial-card flex flex-col"
-        >
-          <div className="relative h-48 overflow-hidden">
+        {/* Operators */}
+        <Link to="/business" className="group editorial-card flex flex-col">
+          <div className="relative h-56 overflow-hidden">
             <img
               src={facilityImage}
-              alt="Commercial wellness facility"
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              alt="Commercial facility"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-600 group-hover:scale-[1.03]"
             />
           </div>
-          <div className="p-8 lg:p-9 flex flex-col flex-1">
+          <div className="p-7 lg:p-8">
             <span className="editorial-label text-primary">Operators</span>
-            <h3 className="mt-3 font-serif text-xl font-semibold text-foreground">
-              Business integration
+            <h3 className="mt-2 font-serif text-xl font-semibold text-foreground leading-snug">
+              Business Integration
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground flex-1">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Commercial viability, installation requirements, and operational
-              considerations for facility owners.
+              considerations for gym owners, spa managers, and wellness
+              entrepreneurs.
             </p>
             <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-primary group-hover:text-primary/80 transition-colors">
               Explore Operations <ArrowRight size={14} />
