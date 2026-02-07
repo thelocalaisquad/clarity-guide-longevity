@@ -2,45 +2,27 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 const CtaStrip = () => (
-  <section className="py-20 lg:py-28">
-    <div className="editorial-container">
-      <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
+  <section className="py-16 lg:py-24">
+    <div className="editorial-container text-center max-w-2xl mx-auto">
+      <h2 className="font-serif text-2xl font-semibold text-foreground md:text-3xl">
+        START <em className="font-normal">exploring</em>
+      </h2>
+      <p className="mt-4 text-muted-foreground text-[0.95rem] leading-relaxed">
+        Dive into our structured overviews of the most relevant longevity
+        technologies — for personal use or commercial integration.
+      </p>
+      <div className="mt-8 flex flex-wrap justify-center gap-4">
         <Link
           to="/technologies"
-          className="group rounded-sm border border-border bg-card p-10 lg:p-12 flex flex-col justify-between transition-all hover:shadow-lg hover:shadow-foreground/5"
+          className="inline-flex items-center gap-2 rounded-sm bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          <div>
-            <span className="editorial-label">For Everyone</span>
-            <h3 className="mt-4 font-serif text-2xl font-semibold text-foreground">
-              Explore Technologies
-            </h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Dive into structured overviews of the most relevant longevity
-              technologies — for personal use or professional curiosity.
-            </p>
-          </div>
-          <span className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-primary group-hover:text-primary/80 transition-colors">
-            Get started <ArrowRight size={14} />
-          </span>
+          Explore Technologies <ArrowRight size={15} />
         </Link>
-
         <Link
           to="/business"
-          className="group rounded-sm border border-border bg-card p-10 lg:p-12 flex flex-col justify-between transition-all hover:shadow-lg hover:shadow-foreground/5"
+          className="inline-flex items-center gap-2 rounded-sm border border-border px-7 py-3.5 text-sm font-medium text-foreground transition-colors hover:bg-accent"
         >
-          <div>
-            <span className="editorial-label">For Operators</span>
-            <h3 className="mt-4 font-serif text-2xl font-semibold text-foreground">
-              Business &amp; Operations
-            </h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Commercial viability, revenue models, and installation guidance for
-              gym owners, spa managers, and wellness entrepreneurs.
-            </p>
-          </div>
-          <span className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-primary group-hover:text-primary/80 transition-colors">
-            Explore operations <ArrowRight size={14} />
-          </span>
+          For Operators <ArrowRight size={15} />
         </Link>
       </div>
     </div>
