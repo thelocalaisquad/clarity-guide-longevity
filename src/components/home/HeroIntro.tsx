@@ -37,18 +37,20 @@ const HeroIntro = () => (
               alt="Infrared sauna with warm natural light"
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
             />
-          </div>
-          <div className="mt-5">
-            <span className="editorial-label text-primary">Infrared Sauna</span>
-            <h2 className="mt-2 font-serif text-3xl font-semibold leading-[1.15] text-foreground md:text-[2.5rem] lg:text-[2.75rem]">
-              Everything You Need to Know About Infrared Saunas{" "}
-              <em className="font-normal">Before</em> You Buy One
-            </h2>
-            <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-muted-foreground">
-              From how they work to what the evidence says about recovery,
-              detoxification, and cardiovascular health — our complete,
-              independent guide.
-            </p>
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+              <h2 className="font-serif text-2xl font-semibold leading-[1.2] text-background md:text-3xl lg:text-[2.5rem]">
+                Uncovering best longevity technology{" "}
+                <em className="font-normal">
+                  — and how to use it for yourself, for your business and for
+                  your clients.
+                </em>
+              </h2>
+              <p className="mt-3 max-w-lg text-sm leading-relaxed text-background/70 md:text-[0.95rem]">
+                The only place where you can see behind the scenes in the
+                fastest growing market in health.
+              </p>
+            </div>
           </div>
         </Link>
 
