@@ -17,52 +17,110 @@ const ProductsHub = () => {
     },
   });
 
+  const homeProducts = products?.filter(p => !p.is_commercial) || [];
+  const commercialProducts = products?.filter(p => p.is_commercial) || [];
+
   return (
     <Layout>
       <section className="py-16 lg:py-24">
-        <div className="editorial-container max-w-4xl">
-          <h1 className="font-serif text-3xl font-semibold text-foreground md:text-4xl">
+        <div className="editorial-container">
+          <span className="editorial-label">Evaluate</span>
+          <div className="editorial-divider mt-4" />
+          <h1 className="mt-6 font-serif text-3xl font-semibold text-foreground md:text-5xl max-w-2xl leading-tight">
             Products
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
+          <p className="mt-5 max-w-xl text-base text-muted-foreground leading-relaxed">
             Descriptive, non-promotional evaluations of longevity technology products — 
             for both home and commercial use.
           </p>
         </div>
       </section>
 
-      <section className="border-t border-border py-12 lg:py-16">
+      <section className="pb-20 lg:pb-28">
         <div className="editorial-container">
           {isLoading ? (
             <div className="grid gap-6 md:grid-cols-2">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-40 animate-pulse rounded border border-border bg-muted" />
+                <div key={i} className="h-48 animate-pulse rounded-sm bg-muted" />
               ))}
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2">
-              {products?.map((product) => (
-                <Link
-                  key={product.id}
-                  to={`/products/${product.slug}`}
-                  className="group rounded border border-border p-6 transition-colors hover:border-primary/30 hover:bg-sage-light"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className={`rounded px-2 py-0.5 text-xs font-medium ${product.is_commercial ? 'bg-primary/10 text-primary' : 'bg-secondary text-secondary-foreground'}`}>
-                      {product.is_commercial ? "Commercial" : "Home"}
-                    </span>
+            <div className="space-y-16">
+              {/* Home products */}
+              {homeProducts.length > 0 && (
+                <div>
+                  <span className="editorial-label">For Home Use</span>
+                  <div className="mt-6 grid gap-6 md:grid-cols-2">
+                    {homeProducts.map((product) => (
+                      <Link
+                        key={product.id}
+                        to={`/products/${product.slug}`}
+                        className="editorial-card-padded group p-7"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <span className="inline-block rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
+                              Home
+                            </span>
+                            <h2 className="mt-4 font-serif text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                              {product.name}
+                            </h2>
+                            {product.technologies && (
+                              <span className="mt-1 block text-xs text-muted-foreground">
+                                {(product.technologies as any).name}
+                              </span>
+                            )}
+                            <p className="mt-3 text-sm leading-relaxed text-muted-foreground line-clamp-3">
+                              {product.description}
+                            </p>
+                            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+                              View details <ArrowRight size={14} />
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
-                  <h2 className="mt-3 font-serif text-lg font-semibold text-foreground group-hover:text-primary">
-                    {product.name}
-                  </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground line-clamp-2">
-                    {product.description}
-                  </p>
-                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                    View details <ArrowRight size={14} />
-                  </span>
-                </Link>
-              ))}
+                </div>
+              )}
+
+              {/* Commercial products */}
+              {commercialProducts.length > 0 && (
+                <div>
+                  <span className="editorial-label">For Commercial Use</span>
+                  <div className="mt-6 grid gap-6 md:grid-cols-2">
+                    {commercialProducts.map((product) => (
+                      <Link
+                        key={product.id}
+                        to={`/products/${product.slug}`}
+                        className="editorial-card-padded group p-7"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                              Commercial
+                            </span>
+                            <h2 className="mt-4 font-serif text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                              {product.name}
+                            </h2>
+                            {product.technologies && (
+                              <span className="mt-1 block text-xs text-muted-foreground">
+                                {(product.technologies as any).name}
+                              </span>
+                            )}
+                            <p className="mt-3 text-sm leading-relaxed text-muted-foreground line-clamp-3">
+                              {product.description}
+                            </p>
+                            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+                              View details <ArrowRight size={14} />
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
