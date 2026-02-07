@@ -17,22 +17,28 @@ const technologies = [
 const Index = () => {
   return (
     <Layout>
-      {/* Hero — full-bleed image with overlay */}
-      <section className="relative h-[75vh] min-h-[500px] flex items-end">
-        <img
-          src={heroImage}
-          alt="Modern infrared sauna with warm natural light"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent" />
-        <div className="relative editorial-container pb-16 lg:pb-20">
-          <span className="editorial-label text-primary-foreground/70">Longevity Technology</span>
-          <h1 className="mt-3 max-w-2xl font-serif text-4xl font-semibold leading-[1.15] text-primary-foreground md:text-5xl lg:text-6xl">
-            Understanding longevity technology, clearly.
-          </h1>
-          <p className="mt-5 max-w-lg text-base leading-relaxed text-primary-foreground/80 md:text-lg">
-            An independent, education-first resource for individuals and operators.
-          </p>
+      {/* Editorial introduction */}
+      <section className="pt-16 pb-20 lg:pt-24 lg:pb-28">
+        <div className="editorial-container">
+          <div className="grid gap-12 lg:grid-cols-[1fr_0.65fr] items-end">
+            <div>
+              <span className="editorial-label">Longevity Technology</span>
+              <div className="editorial-divider mt-4" />
+              <h1 className="mt-6 max-w-xl font-serif text-4xl font-semibold leading-[1.15] text-foreground md:text-5xl lg:text-[3.5rem]">
+                Understanding longevity technology, clearly.
+              </h1>
+              <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground md:text-lg">
+                An independent, education-first resource for individuals and operators exploring evidence-informed wellness technologies.
+              </p>
+            </div>
+            <div className="hidden lg:block">
+              <img
+                src={heroImage}
+                alt="Modern infrared sauna with warm natural light"
+                className="w-full aspect-[3/4] object-cover rounded-sm"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
