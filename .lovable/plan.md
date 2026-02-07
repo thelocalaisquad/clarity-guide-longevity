@@ -1,78 +1,60 @@
 
 
-# Longevity Channel 1 — Website Build Plan
+# Redesign Homepage to Match The Everygirl Layout
 
-## Brand Foundation
-- **Logo & Identity**: Wordmark-first design using a serif/editorial typeface in a neutral palette (bone, off-white, charcoal, muted green, sand). Calm, informed, premium-but-not-luxury tone. No medical, biohacker, or startup imagery.
-- **Design Style**: Editorial magazine aesthetic — generous whitespace, clean typography, long-form readability. Think *The Atlantic* meets *Monocle*.
-- **Color system**: Warm neutrals with a muted green accent, all defined as CSS custom properties for consistency.
+## What Changes
 
-## Global Navigation
-Fixed top navigation with exactly 5 items: **Home · Technologies · Products · Business & Operations · Videos**
+Rebuild the homepage modules to replicate the exact editorial patterns visible in The Everygirl screenshots, replacing Valentine's/lifestyle content with longevity technology content. No changes to URLs, CMS schema, section order, or content hierarchy.
 
-## Backend (Lovable Cloud + Supabase)
-A database-driven CMS so content can be managed without editing code. Core tables:
-- **Technologies** — name, slug, description, how it works, evidence, individual use, operator use, FAQs
-- **Products** — name, slug, technology link, home/commercial flag, specs, installation notes, safety notes
-- **Videos** — title, slug, YouTube embed URL, summary, transcript, technology links, audience label
-- **Operator Pages** — title, slug, content sections, related technologies
-- **Comparison Pages** — title, slug, content, compared technologies
+## Section-by-Section Mapping
 
-A simple **admin panel** (password-protected) to create/edit/delete content across all types.
+### 1. HeroIntro (already close -- minor refinements)
+The current layout already mirrors The Everygirl's hero: large featured article left + "NEW and NOW" sidebar right. Refinements:
+- Make the featured image taller/more dominant (closer to 16:9 or wider)
+- Add a short excerpt paragraph under the headline
+- Ensure sidebar cards have square thumbnails + category label + serif headline (already mostly there)
 
-## Page Templates (Built & Styled)
-We'll build 5 reusable templates, each fully fleshed out with 1–2 real examples:
+### 2. Scrolling Headline Ticker (NEW component)
+Add a horizontal auto-scrolling marquee bar between the hero and the next section, matching The Everygirl's black ticker strip with white text. Content: longevity-related headlines like "INFRARED SAUNAS: THE COMPLETE GUIDE", "IS CRYOTHERAPY WORTH IT?", etc.
 
-### 1. Home Page
-- Hero with editorial positioning statement
-- "What longevity technology is" section
-- "Who this is for" (individuals + operators)
-- How technologies are evaluated
-- Entry points into Technologies and Business & Operations hubs
+### 3. TechnologyGrid -- convert to horizontal scrolling carousel
+Replace the static 5-column grid with a horizontally scrollable carousel (using Embla, already installed) with portrait-aspect cards, matching the XOXO/themed section. Title becomes a centered serif heading. Each card: tall portrait image + category label + serif headline. Left/right arrow buttons on the edges.
 
-### 2. Hub Page Template (used for Technologies, Products, Business & Operations, Videos)
-- Clean index layout with category cards/lists
-- Short factual summaries for each linked item
-- Filtering by technology or audience where appropriate
+### 4. WhatWeCover -- convert to "ICYMI" masonry-style grid
+Replace the current text + staggered images with an asymmetric 3-column masonry layout mixing text-first cards (category + headline on top, image below) and image-first cards (image on top, category + headline below), exactly like the "ICYMI: Stories Readers Are Loving RN" section.
 
-### 3. Technology Page Template
-- Structured sections: What it is → How it works → Evidence → Individual use → Operator use → Related Products → Related Videos → FAQs
-- Example pages: **Infrared Sauna** and **Red Light Therapy** fully built out with placeholder content
+### 5. Newsletter/Subscribe Strip (NEW component)
+Add a dark background strip with centered text "Want exclusive content? We've got you covered." + email input + subscribe button, matching The Everygirl's format.
 
-### 4. Product Page Template
-- Descriptive (not promotional) layout
-- Home vs. commercial suitability clearly labeled
-- Technical specs in structured tables
-- Installation and safety notes
-- Example pages: one home product, one commercial product
+### 6. AudienceCards -- convert to 4-column "Latest Articles" grid
+Replace the 2-card layout with a 4-column grid of portrait image cards (like "Latest Articles"), each with: portrait image, category label, and serif headline. Map to: Infrared Sauna, Red Light Therapy, Cryotherapy, Hyperbaric Oxygen -- linking to technology pages.
 
-### 5. Operator Authority Page Template
-- Factual, pattern-focused content layout
-- No legal advice framing
-- Related technologies sidebar
-- Example page: **Infrared Saunas as a Revenue Stream**
+### 7. ApproachSection -- convert to masonry editorial grid
+Replace the numbered steps layout with a 2-column asymmetric layout matching "The Everygirl at Home": cards that alternate image-first and text-first, with category labels and serif headlines. Content: the three evaluation steps presented as editorial cards rather than numbered boxes.
 
-### 6. Video Page Template
-- YouTube embed with its own dedicated page
-- Summary, transcript section, technologies mentioned, products shown, audience intent label
-- Example page: **How Infrared Saunas Work**
+### 8. CtaStrip -- convert to split promo section
+Replace the centered CTA with a two-column layout matching the Podcast/Substack section: left side has a large image, right side has a heading, paragraph, and sub-cards linking to key areas of the site.
 
-### 7. Comparison Page Template (optional, up to 3)
-- Side-by-side structured comparison
-- Example: **Infrared Sauna vs Traditional Sauna**
+### 9. Footer -- expand to multi-column
+Add multi-column category links matching The Everygirl's footer: Technologies, Products, Business, Videos columns with sub-links, plus a newsletter signup column and a "Contact Us" column.
 
-## What You Get at Launch
-- All templates built and styled with the editorial design system
-- 1–2 complete example pages per template type (~8–10 fully built pages)
-- Admin panel to add the remaining ~24 pages yourself using the same templates
-- Database seeded with the example content
-- All pages dynamically rendered from the CMS — no code changes needed to add content
-- SEO-friendly structure with clear entity hierarchy, intent labeling, and clean URLs
+## Files Modified
+- `src/components/home/HeroIntro.tsx` -- minor sizing tweaks
+- `src/components/home/TechnologyGrid.tsx` -- rewrite as horizontal carousel
+- `src/components/home/WhatWeCover.tsx` -- rewrite as masonry grid
+- `src/components/home/AudienceCards.tsx` -- rewrite as 4-column article grid
+- `src/components/home/ApproachSection.tsx` -- rewrite as asymmetric editorial grid
+- `src/components/home/CtaStrip.tsx` -- rewrite as split promo section
+- `src/components/home/TickerBar.tsx` -- NEW scrolling headline marquee
+- `src/components/home/NewsletterStrip.tsx` -- NEW subscribe bar
+- `src/pages/Index.tsx` -- add TickerBar and NewsletterStrip to the composition
+- `src/components/layout/Footer.tsx` -- expand to multi-column with sub-links
+- `src/index.css` -- add marquee animation keyframes
 
-## Build Phases
-**Phase 1**: Brand system, global layout, navigation, database schema  
-**Phase 2**: Home page, hub pages (Technologies, Products, Business & Operations, Videos)  
-**Phase 3**: Technology page template + 2 examples, Product page template + 2 examples  
-**Phase 4**: Operator page template + 1 example, Video page template + 1 example  
-**Phase 5**: Comparison page template + 1 example, admin panel for content management  
+## Technical Notes
+- The carousel uses `embla-carousel-react` (already installed)
+- Marquee uses CSS animation (`@keyframes marquee`) for smooth infinite scroll
+- All images reuse the existing 4 editorial assets already in `src/assets/`
+- No new dependencies required
+- Mobile: carousel swipes naturally; masonry grids collapse to single column; ticker stays full-width
 
