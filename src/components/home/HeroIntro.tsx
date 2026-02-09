@@ -28,16 +28,25 @@ const sidebarItems = [
 const HeroIntro = () => (
   <section className="pt-8 pb-14 lg:pt-12 lg:pb-20 border-b border-border">
     <div className="editorial-container">
+      {/* B2B Banner */}
+      <Link
+        to="/business"
+        className="mb-6 flex items-center justify-center gap-2 rounded-sm bg-foreground px-4 py-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-background transition-colors hover:bg-foreground/90"
+        style={{ fontFamily: "'Source Sans 3', sans-serif" }}
+      >
+        Looking to add longevity tech to your business? → Explore Business Solutions
+      </Link>
+
       <div className="grid gap-8 lg:grid-cols-[1.4fr_0.6fr]">
-        {/* Featured article */}
-        <Link to="/technologies/infrared-sauna" className="group block">
+        {/* Featured article with audience CTAs */}
+        <div className="group block">
           <div className="relative overflow-hidden rounded-sm aspect-[16/10]">
             <img
               src={heroImage}
               alt="Infrared sauna with warm natural light"
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              className="absolute inset-0 h-full w-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
               <h2 className="font-serif text-2xl font-semibold leading-[1.2] text-background md:text-3xl lg:text-[2.5rem]">
                 Uncovering best longevity technology{" "}
@@ -50,9 +59,25 @@ const HeroIntro = () => (
                 The only place where you can see behind the scenes in the
                 fastest growing market in health.
               </p>
+
+              {/* Audience Split CTAs */}
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <Link
+                  to="/products"
+                  className="inline-flex items-center justify-center h-12 px-8 bg-background text-foreground text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/90 transition-colors"
+                >
+                  Shop Products
+                </Link>
+                <Link
+                  to="/business"
+                  className="inline-flex items-center justify-center h-12 px-8 border-2 border-background text-background text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/10 transition-colors"
+                >
+                  For Your Business
+                </Link>
+              </div>
             </div>
           </div>
-        </Link>
+        </div>
 
         {/* Sidebar */}
         <div>

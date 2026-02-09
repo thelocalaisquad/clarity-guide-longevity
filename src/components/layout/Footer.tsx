@@ -1,8 +1,27 @@
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 const Footer = () => (
   <footer className="bg-foreground py-16 lg:py-20">
     <div className="editorial-container">
+      {/* B2B Highlight Strip */}
+      <div className="mb-14 rounded-sm border border-background/15 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <h3 className="font-serif text-lg font-semibold text-background">
+            Adding longevity tech to your business?
+          </h3>
+          <p className="mt-1 text-sm text-background/50">
+            Equipment selection, compliance, ROI analysis — everything operators need.
+          </p>
+        </div>
+        <Link
+          to="/business"
+          className="inline-flex items-center gap-2 h-10 px-6 bg-background text-foreground text-xs font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/90 transition-colors shrink-0"
+        >
+          Business Solutions <ArrowRight size={12} />
+        </Link>
+      </div>
+
       <div className="grid gap-10 md:grid-cols-5">
         {/* Brand */}
         <div className="md:col-span-2">
@@ -37,23 +56,27 @@ const Footer = () => (
             Explore
           </h4>
           <nav className="flex flex-col gap-2.5">
-            <Link to="/technologies" className="text-sm text-background/60 hover:text-background transition-colors">All Technologies</Link>
             <Link to="/products" className="text-sm text-background/60 hover:text-background transition-colors">Products</Link>
-            <Link to="/business" className="text-sm text-background/60 hover:text-background transition-colors">Business &amp; Operations</Link>
+            <Link to="/technologies" className="text-sm text-background/60 hover:text-background transition-colors">Technology FAQs</Link>
+            <Link to="/reviews" className="text-sm text-background/60 hover:text-background transition-colors">Product Reviews</Link>
             <Link to="/videos" className="text-sm text-background/60 hover:text-background transition-colors">Videos</Link>
+            <Link to="/compare" className="text-sm text-background/60 hover:text-background transition-colors">Compare</Link>
           </nav>
         </div>
 
-        {/* About */}
+        {/* For Business */}
         <div>
           <h4 className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-background/40 mb-4"
             style={{ fontFamily: "'Source Sans 3', sans-serif" }}>
-            About
+            For Business
           </h4>
-          <p className="text-sm leading-relaxed text-background/50">
-            Education-first. No medical advice. No product promotion.
-            Structured information about longevity technologies.
-          </p>
+          <nav className="flex flex-col gap-2.5">
+            <Link to="/business" className="text-sm text-background/60 hover:text-background transition-colors">Business Solutions</Link>
+            <Link to="/business" className="text-sm text-background/60 hover:text-background transition-colors">Implementation</Link>
+            <Link to="/business" className="text-sm text-background/60 hover:text-background transition-colors">Legal & Compliance</Link>
+            <Link to="/business" className="text-sm text-background/60 hover:text-background transition-colors">Case Studies</Link>
+            <Link to="/business" className="text-sm text-background/60 hover:text-background transition-colors">ROI Tools</Link>
+          </nav>
         </div>
       </div>
 
