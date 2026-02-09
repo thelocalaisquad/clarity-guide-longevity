@@ -3,10 +3,12 @@ import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-sauna.jpg";
 
 const links = [
-  { label: "Technology Guides", to: "/technologies", desc: "Evidence-based overviews" },
-  { label: "Product Reviews", to: "/products", desc: "Specs, comparisons & picks" },
-  { label: "For Operators", to: "/business", desc: "Commercial integration" },
+  { label: "Technology FAQs", to: "/technologies", desc: "How each technology works" },
+  { label: "Product Reviews", to: "/reviews", desc: "Specs, comparisons & picks" },
+  { label: "Buying Guides", to: "/products", desc: "What to look for before you buy" },
   { label: "Video Library", to: "/videos", desc: "Visual deep-dives" },
+  { label: "Compare Products", to: "/compare", desc: "Side-by-side analysis" },
+  { label: "Business Solutions", to: "/business", desc: "For operators & facilities" },
 ];
 
 const CtaStrip = () => (
@@ -36,7 +38,7 @@ const CtaStrip = () => (
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {links.map((l) => (
               <Link
-                key={l.to}
+                key={l.to + l.label}
                 to={l.to}
                 className="group flex items-center justify-between rounded-sm border border-border p-4 hover:bg-accent transition-colors"
               >

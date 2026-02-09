@@ -6,10 +6,12 @@ import BannerAd from "./BannerAd";
 
 const navItems = [
   { label: "Home", href: "/" },
-  { label: "Technologies", href: "/technologies" },
   { label: "Products", href: "/products" },
-  { label: "Business & Operations", href: "/business" },
+  { label: "Technology FAQs", href: "/technologies" },
+  { label: "Product Reviews", href: "/reviews" },
+  { label: "Business Solutions", href: "/business" },
   { label: "Videos", href: "/videos" },
+  { label: "Compare", href: "/compare" },
 ];
 
 const Header = () => {
@@ -34,16 +36,18 @@ const Header = () => {
       <div className="h-px bg-border" />
 
       {/* Nav row */}
-      <div className="editorial-container flex h-12 items-center justify-between md:justify-center">
-        <nav className="hidden items-center gap-8 md:flex">
+      <div className="editorial-wide flex h-12 items-center justify-between md:justify-center">
+        <nav className="hidden items-center gap-6 lg:gap-8 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
               to={item.href}
               className={cn(
-                "text-[0.7rem] font-semibold uppercase tracking-[0.18em] transition-colors hover:text-foreground",
-                location.pathname === item.href ||
-                (item.href !== "/" && location.pathname.startsWith(item.href))
+                "text-[0.65rem] font-semibold uppercase tracking-[0.16em] transition-colors hover:text-foreground whitespace-nowrap",
+                item.href === "/business"
+                  ? "text-primary"
+                  : location.pathname === item.href ||
+                    (item.href !== "/" && location.pathname.startsWith(item.href))
                   ? "text-foreground"
                   : "text-muted-foreground"
               )}
@@ -55,7 +59,7 @@ const Header = () => {
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden text-foreground"
+          className="md:hidden text-foreground ml-4"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
