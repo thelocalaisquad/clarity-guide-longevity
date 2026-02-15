@@ -75,35 +75,31 @@ const HeroIntro = () =>
         </div>
 
         {/* Sidebar */}
-        <div>
-          <h3 className="font-serif text-2xl font-semibold text-foreground md:text-3xl">
-            NEW <em className="font-normal">and</em> NOW
-          </h3>
-          <div className="mt-5 space-y-1">
-            {sidebarItems.map((item) =>
+        <div className="space-y-3">
+          {sidebarItems.map((item) =>
           <Link
             key={item.slug}
             to={item.href}
-            className="group flex gap-4 rounded-sm border border-border bg-card p-3 transition-all hover:shadow-md hover:shadow-foreground/5">
+            className="group block relative overflow-hidden rounded-sm transition-all hover:shadow-lg hover:shadow-foreground/10">
 
-                <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-sm">
-                  <img
-                src={item.image}
-                alt={item.title}
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />
-
-                </div>
-                <div className="flex flex-col justify-center py-0.5">
-                  <span className="editorial-label text-primary text-[0.65rem]">
+              <div className="relative aspect-[16/9] overflow-hidden">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <span className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-background/70"
+                    style={{ fontFamily: "'Source Sans 3', sans-serif" }}>
                     {item.category}
                   </span>
-                  <h4 className="mt-1 font-serif text-sm font-semibold leading-snug text-foreground group-hover:text-primary transition-colors md:text-[0.95rem]">
+                  <h4 className="mt-1 font-serif text-lg font-semibold leading-snug text-background group-hover:text-background/90 transition-colors">
                     {item.title}
                   </h4>
                 </div>
-              </Link>
+              </div>
+            </Link>
           )}
-          </div>
         </div>
       </div>
     </div>
