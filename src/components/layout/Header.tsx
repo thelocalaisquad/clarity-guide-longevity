@@ -5,14 +5,13 @@ import { cn } from "@/lib/utils";
 import BannerAd from "./BannerAd";
 
 const navItems = [
-  { label: "Home", href: "/" },
+  { label: "Home Use", href: "/products" },
+  { label: "Health and Wellness Businesses", href: "/business" },
+  { label: "Designers and Architects", href: "/designers" },
+];
+
+const rightNavItems = [
   { label: "About", href: "/about" },
-  { label: "Products", href: "/products" },
-  { label: "Technology FAQs", href: "/technologies" },
-  { label: "Product Reviews", href: "/reviews" },
-  { label: "Business Solutions", href: "/business" },
-  { label: "Videos", href: "/videos" },
-  { label: "Compare", href: "/compare" },
 ];
 
 const Header = () => {
@@ -43,7 +42,7 @@ const Header = () => {
       <div className="h-px bg-border" />
 
       {/* Nav row */}
-      <div className="editorial-wide flex h-12 items-center justify-between md:justify-center">
+      <div className="editorial-wide flex h-12 items-center justify-between">
         <nav className="hidden items-center gap-6 lg:gap-8 md:flex">
           {navItems.map((item) => (
             <Link
@@ -51,10 +50,25 @@ const Header = () => {
               to={item.href}
               className={cn(
                 "text-[0.65rem] font-semibold uppercase tracking-[0.16em] transition-colors hover:text-foreground whitespace-nowrap",
-                item.href === "/business"
-                  ? "text-primary"
-                  : location.pathname === item.href ||
-                    (item.href !== "/" && location.pathname.startsWith(item.href))
+                location.pathname === item.href ||
+                  (item.href !== "/" && location.pathname.startsWith(item.href))
+                  ? "text-foreground"
+                  : "text-muted-foreground"
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <nav className="hidden items-center gap-6 lg:gap-8 md:flex">
+          {rightNavItems.map((item) => (
+            <Link
+              key={item.href}
+              to={item.href}
+              className={cn(
+                "text-[0.65rem] font-semibold uppercase tracking-[0.16em] transition-colors hover:text-foreground whitespace-nowrap",
+                location.pathname === item.href
                   ? "text-foreground"
                   : "text-muted-foreground"
               )}
@@ -79,7 +93,7 @@ const Header = () => {
       {/* Mobile nav */}
       {mobileOpen && (
         <nav className="border-b border-border bg-background px-6 py-6 md:hidden">
-          {navItems.map((item) => (
+          {[...navItems, ...rightNavItems].map((item) => (
             <Link
               key={item.href}
               to={item.href}
