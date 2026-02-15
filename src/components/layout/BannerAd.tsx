@@ -11,12 +11,12 @@ const BannerAd = () => (
     <img
       src={straplineBg}
       alt=""
-      className="w-full h-auto object-cover max-h-[80px] md:max-h-[100px]"
+      className="w-full h-auto object-cover object-right-top max-h-[100px] md:max-h-[140px]"
     />
     {/* Text overlay */}
     <div className="absolute inset-0 flex items-center">
       <div className="editorial-wide flex w-full items-center justify-between gap-4">
-        <p className="font-serif text-xs md:text-sm lg:text-base font-semibold text-white leading-tight max-w-[65%]">
+        <p className="font-serif text-sm md:text-lg lg:text-xl font-semibold text-white leading-tight max-w-[65%]">
           How The Best Gyms Are Quietly Becoming Longevity Hubs{" "}
           <span className="italic font-normal">(and adding $10-50k a month)</span>
         </p>
