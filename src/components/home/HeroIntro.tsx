@@ -5,35 +5,35 @@ import facilityImage from "@/assets/editorial-facility.jpg";
 import wellnessImage from "@/assets/editorial-wellness.jpg";
 
 const sidebarItems = [
-  {
-    category: "Red Light Therapy",
-    title: "How Red Light Therapy Actually Works — And What It Doesn't Do",
-    slug: "red-light-therapy",
-    image: redlightImage,
-  },
-  {
-    category: "Hyperbaric Oxygen",
-    title: "Hyperbaric Oxygen Therapy: The Evidence Behind the Hype",
-    slug: "hyperbaric-oxygen-therapy",
-    image: facilityImage,
-  },
-  {
-    category: "Cryotherapy",
-    title: "Is Cryotherapy Worth It? What the Research Actually Shows",
-    slug: "cryotherapy",
-    image: wellnessImage,
-  },
-];
+{
+  category: "Red Light Therapy",
+  title: "How Red Light Therapy Actually Works — And What It Doesn't Do",
+  slug: "red-light-therapy",
+  image: redlightImage
+},
+{
+  category: "Hyperbaric Oxygen",
+  title: "Hyperbaric Oxygen Therapy: The Evidence Behind the Hype",
+  slug: "hyperbaric-oxygen-therapy",
+  image: facilityImage
+},
+{
+  category: "Cryotherapy",
+  title: "Is Cryotherapy Worth It? What the Research Actually Shows",
+  slug: "cryotherapy",
+  image: wellnessImage
+}];
 
-const HeroIntro = () => (
-  <section className="pt-8 pb-14 lg:pt-12 lg:pb-20 border-b border-border">
+
+const HeroIntro = () =>
+<section className="pt-8 pb-14 lg:pt-12 lg:pb-20 border-b border-border">
     <div className="editorial-container">
       {/* B2B Banner */}
       <Link
-        to="/business"
-        className="mb-6 flex items-center justify-center gap-2 rounded-sm bg-foreground px-4 py-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-background transition-colors hover:bg-foreground/90"
-        style={{ fontFamily: "'Source Sans 3', sans-serif" }}
-      >
+      to="/business"
+      className="mb-6 flex items-center justify-center gap-2 rounded-sm bg-foreground px-4 py-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-background transition-colors hover:bg-foreground/90"
+      style={{ fontFamily: "'Source Sans 3', sans-serif" }}>
+
         Looking to add longevity tech to your business? → Explore Business Solutions
       </Link>
 
@@ -42,18 +42,18 @@ const HeroIntro = () => (
         <div className="group block">
           <div className="relative overflow-hidden rounded-sm aspect-[16/10]">
             <img
-              src={heroImage}
-              alt="Infrared sauna with warm natural light"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+            src={heroImage}
+            alt="Infrared sauna with warm natural light"
+            className="absolute inset-0 h-full w-full object-cover" />
+
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
               <h2 className="font-serif text-2xl font-semibold leading-[1.2] text-background md:text-3xl lg:text-[2.5rem]">
                 Uncovering best longevity technology{" "}
                 <em className="font-normal">
-                  — and how to use it for yourself, for your business and for
-                  your clients.
-                </em>
+                  — and how to use it at home and in your business.
+                
+              </em>
               </h2>
               <p className="mt-3 max-w-lg text-sm leading-relaxed text-background/70 md:text-[0.95rem]">
                 The only place where you can see behind the scenes in the
@@ -63,15 +63,15 @@ const HeroIntro = () => (
               {/* Audience Split CTAs */}
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 <Link
-                  to="/products"
-                  className="inline-flex items-center justify-center h-12 px-8 bg-background text-foreground text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/90 transition-colors"
-                >
+                to="/products"
+                className="inline-flex items-center justify-center h-12 px-8 bg-background text-foreground text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/90 transition-colors">
+
                   Shop Products
                 </Link>
                 <Link
-                  to="/business"
-                  className="inline-flex items-center justify-center h-12 px-8 border-2 border-background text-background text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/10 transition-colors"
-                >
+                to="/business"
+                className="inline-flex items-center justify-center h-12 px-8 border-2 border-background text-background text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/10 transition-colors">
+
                   For Your Business
                 </Link>
               </div>
@@ -85,18 +85,18 @@ const HeroIntro = () => (
             NEW <em className="font-normal">and</em> NOW
           </h3>
           <div className="mt-5 space-y-1">
-            {sidebarItems.map((item) => (
-              <Link
-                key={item.slug}
-                to={`/technologies/${item.slug}`}
-                className="group flex gap-4 rounded-sm border border-border bg-card p-3 transition-all hover:shadow-md hover:shadow-foreground/5"
-              >
+            {sidebarItems.map((item) =>
+          <Link
+            key={item.slug}
+            to={`/technologies/${item.slug}`}
+            className="group flex gap-4 rounded-sm border border-border bg-card p-3 transition-all hover:shadow-md hover:shadow-foreground/5">
+
                 <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-sm">
                   <img
-                    src={item.image}
-                    alt={item.title}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
-                  />
+                src={item.image}
+                alt={item.title}
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />
+
                 </div>
                 <div className="flex flex-col justify-center py-0.5">
                   <span className="editorial-label text-primary text-[0.65rem]">
@@ -107,12 +107,12 @@ const HeroIntro = () => (
                   </h4>
                 </div>
               </Link>
-            ))}
+          )}
           </div>
         </div>
       </div>
     </div>
-  </section>
-);
+  </section>;
+
 
 export default HeroIntro;
