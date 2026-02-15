@@ -87,15 +87,14 @@ const HeroIntro = () =>
                   src={item.image}
                   alt={item.title}
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <span className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-background/70"
-                    style={{ fontFamily: "'Source Sans 3', sans-serif" }}>
+                  <h3 className="font-serif text-2xl font-bold leading-tight text-background md:text-3xl">
                     {item.category}
-                  </span>
-                  <h4 className="mt-1 font-serif text-lg font-semibold leading-snug text-background group-hover:text-background/90 transition-colors">
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-background/70">
                     {item.title}
-                  </h4>
+                  </p>
                 </div>
               </div>
             </Link>
