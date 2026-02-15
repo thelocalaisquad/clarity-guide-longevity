@@ -6,22 +6,25 @@ import wellnessImage from "@/assets/editorial-wellness.jpg";
 
 const sidebarItems = [
 {
-  category: "Red Light Therapy",
-  title: "How Red Light Therapy Actually Works — And What It Doesn't Do",
+  category: "Use At Home",
+  title: "Build Your Personal Longevity Environment — From Saunas to Red Light",
   slug: "red-light-therapy",
-  image: redlightImage
+  image: redlightImage,
+  href: "/products"
 },
 {
-  category: "Hyperbaric Oxygen",
-  title: "Hyperbaric Oxygen Therapy: The Evidence Behind the Hype",
+  category: "Health and Wellness Businesses",
+  title: "Add High-Value Recovery Tech to Your Gym, Clinic, or Spa",
   slug: "hyperbaric-oxygen-therapy",
-  image: facilityImage
+  image: facilityImage,
+  href: "/business"
 },
 {
-  category: "Cryotherapy",
-  title: "Is Cryotherapy Worth It? What the Research Actually Shows",
+  category: "Designers and Architects",
+  title: "Integrate Longevity Technology Into Luxury Residential and Commercial Projects",
   slug: "cryotherapy",
-  image: wellnessImage
+  image: wellnessImage,
+  href: "/designers"
 }];
 
 
@@ -88,7 +91,7 @@ const HeroIntro = () =>
             {sidebarItems.map((item) =>
           <Link
             key={item.slug}
-            to={`/technologies/${item.slug}`}
+            to={item.href}
             className="group flex gap-4 rounded-sm border border-border bg-card p-3 transition-all hover:shadow-md hover:shadow-foreground/5">
 
                 <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-sm">
