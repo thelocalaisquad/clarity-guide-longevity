@@ -31,14 +31,6 @@ const sidebarItems = [
 const HeroIntro = () =>
 <section className="pt-8 pb-14 lg:pt-12 lg:pb-20 border-b border-border">
     <div className="editorial-container">
-      {/* B2B Banner */}
-      <Link
-      to="/business"
-      className="mb-6 flex items-center justify-center gap-2 rounded-sm bg-foreground px-4 py-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-background transition-colors hover:bg-foreground/90"
-      style={{ fontFamily: "'Source Sans 3', sans-serif" }}>
-
-        Looking to add longevity tech to your business? → Explore Business Solutions
-      </Link>
 
       <div className="grid gap-8 lg:grid-cols-[1.4fr_0.6fr]">
         {/* Featured article with audience CTAs */}
