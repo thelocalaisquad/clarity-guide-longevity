@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+
 
 const BannerAd = () => (
   <div className="w-full bg-foreground text-background">
@@ -7,12 +7,14 @@ const BannerAd = () => (
         How The Best Gyms Are Quietly Becoming Longevity Hubs{" "}
         <span className="italic">(and adding $10-50k a month)</span>
       </p>
-      <Link
-        to="/business"
+      <a
+        href="https://info.longevitychannel1.com"
+        target="_blank"
+        rel="noopener noreferrer"
         className="shrink-0 rounded-sm bg-background text-foreground px-5 py-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.18em] transition-colors hover:bg-background/90"
       >
         Free Training
-      </Link>
+      </a>
     </div>
   </div>
 );
