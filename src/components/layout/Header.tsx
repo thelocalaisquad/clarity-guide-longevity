@@ -5,12 +5,9 @@ import { cn } from "@/lib/utils";
 import BannerAd from "./BannerAd";
 
 const navItems = [
-  { label: "Home Use", href: "/products" },
+  { label: "Use At Home", href: "/products" },
   { label: "Health and Wellness Businesses", href: "/business" },
   { label: "Designers and Architects", href: "/designers" },
-];
-
-const rightNavItems = [
   { label: "About", href: "/about" },
 ];
 
@@ -42,7 +39,7 @@ const Header = () => {
       <div className="h-px bg-border" />
 
       {/* Nav row */}
-      <div className="editorial-wide flex h-12 items-center justify-between">
+      <div className="editorial-wide flex h-12 items-center justify-between md:justify-center">
         <nav className="hidden items-center gap-6 lg:gap-8 md:flex">
           {navItems.map((item) => (
             <Link
@@ -52,23 +49,6 @@ const Header = () => {
                 "text-[0.65rem] font-semibold uppercase tracking-[0.16em] transition-colors hover:text-foreground whitespace-nowrap",
                 location.pathname === item.href ||
                   (item.href !== "/" && location.pathname.startsWith(item.href))
-                  ? "text-foreground"
-                  : "text-muted-foreground"
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <nav className="hidden items-center gap-6 lg:gap-8 md:flex">
-          {rightNavItems.map((item) => (
-            <Link
-              key={item.href}
-              to={item.href}
-              className={cn(
-                "text-[0.65rem] font-semibold uppercase tracking-[0.16em] transition-colors hover:text-foreground whitespace-nowrap",
-                location.pathname === item.href
                   ? "text-foreground"
                   : "text-muted-foreground"
               )}
@@ -93,7 +73,7 @@ const Header = () => {
       {/* Mobile nav */}
       {mobileOpen && (
         <nav className="border-b border-border bg-background px-6 py-6 md:hidden">
-          {[...navItems, ...rightNavItems].map((item) => (
+          {navItems.map((item) => (
             <Link
               key={item.href}
               to={item.href}
