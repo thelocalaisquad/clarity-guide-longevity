@@ -23,8 +23,7 @@ const Header = () => {
       <BannerAd />
 
       {/* Wordmark */}
-      <div className="editorial-container flex items-center justify-between py-5 md:py-6">
-        <div className="flex-1" />
+      <div className="editorial-container flex items-center justify-center py-5 md:py-6">
         <div className="text-center">
           <Link
             to="/"
@@ -37,20 +36,12 @@ const Header = () => {
             How Longevity Technology Is Transforming Homes and Businesses
           </p>
         </div>
-        <div className="flex-1 flex justify-end">
-          <button
-            onClick={() => setExpertOpen(true)}
-            className="hidden md:inline-flex items-center h-9 px-5 bg-foreground text-background text-[0.65rem] font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-foreground/90 transition-colors whitespace-nowrap"
-          >
-            Talk to an Expert
-          </button>
-        </div>
       </div>
 
       <div className="h-px bg-border" />
 
       {/* Nav row */}
-      <div className="editorial-wide flex h-12 items-center justify-between md:justify-center">
+      <div className="editorial-wide flex h-12 items-center justify-between">
         <nav className="hidden items-center gap-6 lg:gap-8 md:flex">
           {navItems.map((item) => (
             <Link
@@ -68,6 +59,13 @@ const Header = () => {
             </Link>
           ))}
         </nav>
+
+        <button
+          onClick={() => setExpertOpen(true)}
+          className="hidden md:inline-flex items-center h-9 px-5 bg-foreground text-background text-[0.65rem] font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-foreground/90 transition-colors whitespace-nowrap"
+        >
+          Talk to an Expert
+        </button>
 
         {/* Mobile toggle */}
         <button
