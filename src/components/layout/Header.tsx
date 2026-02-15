@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import BannerAd from "./BannerAd";
+import ExpertDialog from "./ExpertDialog";
 
 const navItems = [
   { label: "Use At Home", href: "/products" },
@@ -14,6 +15,7 @@ const navItems = [
 const Header = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [expertOpen, setExpertOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background">
@@ -21,7 +23,8 @@ const Header = () => {
       <BannerAd />
 
       {/* Wordmark */}
-      <div className="editorial-container flex items-center justify-center py-5 md:py-6">
+      <div className="editorial-container flex items-center justify-between py-5 md:py-6">
+        <div className="flex-1" />
         <div className="text-center">
           <Link
             to="/"
@@ -33,6 +36,14 @@ const Header = () => {
             style={{ fontFamily: "'Source Sans 3', sans-serif" }}>
             How Longevity Technology Is Transforming Homes and Businesses
           </p>
+        </div>
+        <div className="flex-1 flex justify-end">
+          <button
+            onClick={() => setExpertOpen(true)}
+            className="hidden md:inline-flex items-center h-9 px-5 bg-foreground text-background text-[0.65rem] font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-foreground/90 transition-colors whitespace-nowrap"
+          >
+            Talk to an Expert
+          </button>
         </div>
       </div>
 
@@ -88,8 +99,16 @@ const Header = () => {
               {item.label}
             </Link>
           ))}
+          <button
+            onClick={() => { setMobileOpen(false); setExpertOpen(true); }}
+            className="block py-3 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-primary transition-colors"
+          >
+            Talk to an Expert
+          </button>
         </nav>
       )}
+
+      <ExpertDialog open={expertOpen} onOpenChange={setExpertOpen} />
     </header>
   );
 };
