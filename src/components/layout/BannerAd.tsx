@@ -11,7 +11,7 @@ const BannerAd = () => (
     <img
       src={straplineBg}
       alt=""
-      className="w-full h-[140px] md:h-[190px] object-cover object-center"
+      className="w-full h-[140px] md:h-[190px] object-cover object-[center_30%]"
     />
     {/* Text overlay */}
     <div className="absolute inset-0 flex items-center">
