@@ -6,6 +6,7 @@ import BannerAd from "./BannerAd";
 
 const navItems = [
   { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
   { label: "Products", href: "/products" },
   { label: "Technology FAQs", href: "/technologies" },
   { label: "Product Reviews", href: "/reviews" },
@@ -25,12 +26,18 @@ const Header = () => {
 
       {/* Wordmark */}
       <div className="editorial-container flex items-center justify-center py-5 md:py-6">
-        <Link
-          to="/"
-          className="font-serif text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
-        >
-          LONGEVITY CHANNEL 1
-        </Link>
+        <div className="text-center">
+          <Link
+            to="/"
+            className="font-serif text-2xl font-semibold tracking-tight text-foreground md:text-3xl"
+          >
+            LONGEVITY CHANNEL 1
+          </Link>
+          <p className="mt-1 text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-muted-foreground md:text-[0.7rem]"
+            style={{ fontFamily: "'Source Sans 3', sans-serif" }}>
+            How Longevity Technology Is Transforming Homes and Businesses
+          </p>
+        </div>
       </div>
 
       <div className="h-px bg-border" />
