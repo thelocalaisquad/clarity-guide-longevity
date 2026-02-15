@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import ExpertDialog from "@/components/layout/ExpertDialog";
 import heroImage from "@/assets/hero-sauna.jpg";
 import redlightImage from "@/assets/editorial-redlight.jpg";
 import facilityImage from "@/assets/editorial-facility.jpg";
@@ -28,7 +30,10 @@ const sidebarItems = [
 }];
 
 
-const HeroIntro = () =>
+const HeroIntro = () => {
+  const [expertOpen, setExpertOpen] = useState(false);
+  return (
+  <>
 <section className="pt-8 pb-14 lg:pt-12 lg:pb-20 border-b border-border">
     <div className="editorial-container">
 
@@ -55,20 +60,13 @@ const HeroIntro = () =>
                 fastest growing market in health.
               </p>
 
-              {/* Audience Split CTAs */}
-              <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                <Link
-                to="/products"
-                className="inline-flex items-center justify-center h-12 px-8 bg-background text-foreground text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/90 transition-colors">
-
-                  Shop Products
-                </Link>
-                <Link
-                to="/business"
-                className="inline-flex items-center justify-center h-12 px-8 border-2 border-background text-background text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/10 transition-colors">
-
-                  For Your Business
-                </Link>
+              <div className="mt-6">
+                <button
+                  onClick={() => setExpertOpen(true)}
+                  className="inline-flex items-center justify-center h-12 px-8 bg-background text-foreground text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/90 transition-colors"
+                >
+                  Talk to an Expert
+                </button>
               </div>
             </div>
           </div>
@@ -102,7 +100,11 @@ const HeroIntro = () =>
         </div>
       </div>
     </div>
-  </section>;
+  </section>
+  <ExpertDialog open={expertOpen} onOpenChange={setExpertOpen} />
+  </>
+  );
+};
 
 
 export default HeroIntro;
