@@ -1,31 +1,37 @@
+import { useLocation } from "react-router-dom";
 import straplineBg from "@/assets/strapline-bg.jpg";
 
-const BannerAd = () => (
-  <a
-    href="https://info.longevitychannel1.com"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="relative block w-full overflow-hidden"
-    aria-label="Free gym longevity training"
-  >
-    <img
-      src={straplineBg}
-      alt=""
-      className="w-full h-[140px] md:h-[190px] object-cover object-[center_30%]"
-    />
-    {/* Text overlay */}
-    <div className="absolute inset-0 flex items-center">
-      <div className="editorial-wide flex w-full items-center justify-between gap-4">
-        <p className="font-serif text-lg md:text-2xl lg:text-3xl font-semibold text-white leading-tight max-w-[60%]">
-          How The Best Gyms Are Quietly Becoming Longevity Hubs{" "}
-          <span className="italic font-normal">(and adding $10-50k a month)</span>
-        </p>
-        <span className="shrink-0 rounded-sm bg-amber-500 text-black px-4 py-1.5 text-[0.6rem] md:text-[0.65rem] font-bold uppercase tracking-[0.16em] hover:bg-amber-400 transition-colors">
-          Free Training
-        </span>
+const BannerAd = () => {
+  const location = useLocation();
+
+  if (location.pathname !== "/") return null;
+
+  return (
+    <a
+      href="https://info.longevitychannel1.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="relative block w-full overflow-hidden"
+      aria-label="Free gym longevity training"
+    >
+      <img
+        src={straplineBg}
+        alt=""
+        className="w-full h-[140px] md:h-[190px] object-cover object-[center_30%]"
+      />
+      <div className="absolute inset-0 flex items-center">
+        <div className="editorial-wide flex w-full items-center justify-between gap-4">
+          <p className="font-serif text-lg md:text-2xl lg:text-3xl font-semibold text-white leading-tight max-w-[60%]">
+            How The Best Gyms Are Quietly Becoming Longevity Hubs{" "}
+            <span className="italic font-normal">(and adding $10-50k a month)</span>
+          </p>
+          <span className="shrink-0 rounded-sm bg-amber-500 text-black px-4 py-1.5 text-[0.6rem] md:text-[0.65rem] font-bold uppercase tracking-[0.16em] hover:bg-amber-400 transition-colors">
+            Free Training
+          </span>
+        </div>
       </div>
-    </div>
-  </a>
-);
+    </a>
+  );
+};
 
 export default BannerAd;
