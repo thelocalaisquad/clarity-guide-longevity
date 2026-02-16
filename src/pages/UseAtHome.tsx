@@ -3,10 +3,11 @@ import Layout from "@/components/layout/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import ExpertDialog from "@/components/layout/ExpertDialog";
-import heroImage from "@/assets/hero-sauna.jpg";
+import heroHomeImage from "@/assets/hero-home.jpg";
 import redlightImage from "@/assets/editorial-redlight.jpg";
 import wellnessImage from "@/assets/editorial-wellness.jpg";
 import facilityImage from "@/assets/editorial-facility.jpg";
+import heroImage from "@/assets/hero-sauna.jpg";
 
 const categories = [
   {
@@ -71,25 +72,32 @@ const UseAtHome = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-16 lg:py-24 border-b border-border">
-        <div className="editorial-container">
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src={heroHomeImage}
+            alt="Modern apartment with integrated longevity technology"
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/40 to-foreground/10" />
+        </div>
+        <div className="relative editorial-container py-28 lg:py-40">
           <span
-            className="text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-muted-foreground"
+            className="text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-background/60"
             style={{ fontFamily: "'Source Sans 3', sans-serif" }}
           >
             For Your Home
           </span>
-          <div className="editorial-divider mt-4" />
-          <h1 className="mt-6 font-serif text-4xl font-semibold leading-[1.15] text-foreground md:text-5xl lg:text-6xl max-w-3xl">
+          <h1 className="mt-4 font-serif text-4xl font-semibold leading-[1.15] text-background md:text-5xl lg:text-6xl max-w-3xl">
             Use At Home
           </h1>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-background/70 md:text-lg">
             Learn how to select, implement and use the right longevity technology
             to transform your health and recovery at home.
           </p>
           <button
             onClick={() => setExpertOpen(true)}
-            className="mt-8 inline-flex items-center justify-center h-12 px-8 bg-foreground text-background text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-foreground/90 transition-colors"
+            className="mt-8 inline-flex items-center justify-center h-12 px-8 bg-background text-foreground text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/90 transition-colors"
           >
             Talk to an Expert
           </button>
