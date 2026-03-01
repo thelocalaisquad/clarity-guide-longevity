@@ -10,7 +10,7 @@ const About = () => (
           About
         </p>
         <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl font-semibold leading-[1.15] text-foreground">
-          How Longevity Technology Is Transforming Homes&nbsp;and&nbsp;Businesses
+          How Longevity Technology Is Transforming Lives, Homes,&nbsp;and&nbsp;Businesses
         </h1>
       </header>
 
