@@ -60,12 +60,20 @@ const Header = () => {
           ))}
         </nav>
 
-        <button
-          onClick={() => setExpertOpen(true)}
-          className="hidden md:inline-flex items-center h-9 px-5 bg-foreground text-background text-[0.65rem] font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-foreground/90 transition-colors whitespace-nowrap"
-        >
-          Talk to an Expert
-        </button>
+        <div className="hidden md:flex items-center gap-3">
+          <Link
+            to="/products"
+            className="inline-flex items-center h-9 px-5 bg-foreground text-background text-[0.65rem] font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-foreground/90 transition-colors whitespace-nowrap"
+          >
+            Shop Now
+          </Link>
+          <button
+            onClick={() => setExpertOpen(true)}
+            className="inline-flex items-center h-9 px-5 border border-foreground text-foreground text-[0.65rem] font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-foreground/10 transition-colors whitespace-nowrap"
+          >
+            Talk to an Expert
+          </button>
+        </div>
 
         {/* Mobile toggle */}
         <button
