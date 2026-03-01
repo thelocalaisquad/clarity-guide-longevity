@@ -33,7 +33,7 @@ const Header = () => {
           </Link>
           <p className="mt-1 text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-muted-foreground md:text-[0.7rem]"
             style={{ fontFamily: "'Source Sans 3', sans-serif" }}>
-            How Longevity Technology Is Transforming Homes and Businesses
+            How Longevity Technology Is Transforming Lives, Homes, and Businesses
           </p>
         </div>
       </div>
