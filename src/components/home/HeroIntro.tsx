@@ -56,14 +56,19 @@ const HeroIntro = () => {
               </em>
               </h2>
               <p className="mt-3 max-w-lg text-sm leading-relaxed text-background/70 md:text-[0.95rem]">
-                The only place where you can see behind the scenes in the
-                fastest growing market in health.
+                The only place to see exactly what longevity technologies are available, how they work, and how to use them for yourself or for your business.
               </p>
 
-              <div className="mt-6">
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  to="/products"
+                  className="inline-flex items-center justify-center h-12 px-8 bg-background text-foreground text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/90 transition-colors"
+                >
+                  Shop Now
+                </Link>
                 <button
                   onClick={() => setExpertOpen(true)}
-                  className="inline-flex items-center justify-center h-12 px-8 bg-background text-foreground text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/90 transition-colors"
+                  className="inline-flex items-center justify-center h-12 px-8 border border-background text-background text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/10 transition-colors"
                 >
                   Talk to an Expert
                 </button>
