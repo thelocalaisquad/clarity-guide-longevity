@@ -8,6 +8,7 @@ import EditionProductSpotlight from "@/components/edition/EditionProductSpotligh
 import EditionFaq, { type FaqItem } from "@/components/edition/EditionFaq";
 import EditionSubscribe from "@/components/edition/EditionSubscribe";
 import EditionJsonLd from "@/components/edition/EditionJsonLd";
+import EditionSocialGenerator from "@/components/edition/EditionSocialGenerator";
 
 /* ── placeholder data — replace per edition ── */
 const edition = {
