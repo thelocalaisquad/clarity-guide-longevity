@@ -8,6 +8,7 @@ import EditionProductSpotlight from "@/components/edition/EditionProductSpotligh
 import EditionFaq, { type FaqItem } from "@/components/edition/EditionFaq";
 import EditionSubscribe from "@/components/edition/EditionSubscribe";
 import EditionJsonLd from "@/components/edition/EditionJsonLd";
+import EditionSocialGenerator from "@/components/edition/EditionSocialGenerator";
 
 /* ── placeholder data — replace per edition ── */
 const edition = {
@@ -169,6 +170,18 @@ const EditionTemplate = () => (
       {/* FAQ */}
       <EditionFaq faqs={edition.faqs} />
     </article>
+
+    {/* Social Content Generator */}
+    <EditionSocialGenerator
+      title={edition.title}
+      summary={edition.leadSummary.replace(/<[^>]*>/g, "")}
+      category={edition.category}
+      expertName={edition.expert.name}
+      expertCredential={edition.expert.credential}
+      productName={edition.product.name}
+      productDescription={edition.product.description}
+      canonicalUrl={edition.canonicalUrl}
+    />
 
     {/* Subscribe banner */}
     <EditionSubscribe />

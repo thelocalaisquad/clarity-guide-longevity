@@ -1,1 +1,7 @@
 project_id = "pjriaxqmyzvgtwaspsqv"
+
+[functions.generate-social-content]
+verify_jwt = false
+
+[functions.send-to-n8n]
+verify_jwt = false
