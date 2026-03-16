@@ -171,6 +171,18 @@ const EditionTemplate = () => (
       <EditionFaq faqs={edition.faqs} />
     </article>
 
+    {/* Social Content Generator */}
+    <EditionSocialGenerator
+      title={edition.title}
+      summary={edition.leadSummary.replace(/<[^>]*>/g, "")}
+      category={edition.category}
+      expertName={edition.expert.name}
+      expertCredential={edition.expert.credential}
+      productName={edition.product.name}
+      productDescription={edition.product.description}
+      canonicalUrl={edition.canonicalUrl}
+    />
+
     {/* Subscribe banner */}
     <EditionSubscribe />
   </Layout>
