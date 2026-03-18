@@ -160,6 +160,7 @@ const EditionTemplate = () => (
       <EditionByline
         author={edition.author}
         date={edition.date}
+        dateIso={edition.dateIso}
         readTime={edition.readTime}
       />
 
