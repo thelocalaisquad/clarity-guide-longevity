@@ -8,7 +8,7 @@ interface EditionBylineProps {
   readTime: string;
 }
 
-const EditionByline = ({ author, date, readTime }: EditionBylineProps) => {
+const EditionByline = ({ author, date, dateIso, readTime }: EditionBylineProps) => {
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     toast({ title: "Link copied to clipboard" });
