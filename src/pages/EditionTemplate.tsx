@@ -8,8 +8,10 @@ import EditionHeader from "@/components/edition/EditionHeader";
 import EditionByline from "@/components/edition/EditionByline";
 import EditionVideo from "@/components/edition/EditionVideo";
 import EditionExpertCallout from "@/components/edition/EditionExpertCallout";
+import EditionStructuredSections from "@/components/edition/EditionStructuredSections";
 import EditionProductSpotlight from "@/components/edition/EditionProductSpotlight";
 import EditionFaq, { type FaqItem } from "@/components/edition/EditionFaq";
+import EditionContactCta from "@/components/edition/EditionContactCta";
 import EditionSubscribe from "@/components/edition/EditionSubscribe";
 import EditionJsonLd from "@/components/edition/EditionJsonLd";
 import EditionSocialGenerator from "@/components/edition/EditionSocialGenerator";
@@ -56,10 +58,22 @@ const EditionTemplate = () => {
   const canonicalUrl = edition.canonical_url || `https://clarity-guide-longevity.lovable.app/editions/${edition.slug}`;
   const ogImage = edition.og_image || "/placeholder.svg";
 
-  // Extract price numbers for JSON-LD
   const priceMatch = edition.product_price_range?.match(/[\d,]+/g);
   const priceLow = priceMatch?.[0]?.replace(/,/g, "") || "";
   const priceHigh = priceMatch?.[1]?.replace(/,/g, "") || priceLow;
+
+  const hasStructuredSections =
+    edition.section_what_is_it ||
+    edition.section_how_it_works ||
+    edition.section_why_different ||
+    edition.section_who_is_it_for;
+
+  // Collect section names for JSON-LD articleSection
+  const articleSections: string[] = [edition.category];
+  if (edition.section_what_is_it) articleSections.push("What Is It?");
+  if (edition.section_how_it_works) articleSections.push("How It Works");
+  if (edition.section_why_different) articleSections.push("Why Is It Different?");
+  if (edition.section_who_is_it_for) articleSections.push("Who Is It For?");
 
   return (
     <Layout>
@@ -101,7 +115,7 @@ const EditionTemplate = () => {
         productPriceHigh={priceHigh}
         faqs={faqs}
         editionNumber={edition.edition_number}
-        category={edition.category}
+        category={articleSections.join(", ")}
         readTime={edition.read_time}
       />
 
@@ -142,9 +156,17 @@ const EditionTemplate = () => {
           />
         )}
 
-        {edition.body_html && (
+        {/* Structured sections take priority over legacy body_html */}
+        {hasStructuredSections ? (
+          <EditionStructuredSections
+            whatIsIt={edition.section_what_is_it}
+            howItWorks={edition.section_how_it_works}
+            whyDifferent={edition.section_why_different}
+            whoIsItFor={edition.section_who_is_it_for}
+          />
+        ) : edition.body_html ? (
           <div itemProp="articleBody" className="editorial-narrow editorial-prose prose prose-headings:font-serif prose-headings:text-foreground prose-blockquote:border-l-foreground prose-blockquote:text-foreground/70 prose-blockquote:italic max-w-none" dangerouslySetInnerHTML={{ __html: edition.body_html }} />
-        )}
+        ) : null}
 
         {edition.product_name && (
           <EditionProductSpotlight
@@ -159,6 +181,8 @@ const EditionTemplate = () => {
 
         {faqs.length > 0 && <EditionFaq faqs={faqs} />}
       </article>
+
+      <EditionContactCta />
 
       <EditionSocialGenerator
         title={edition.title}

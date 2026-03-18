@@ -97,7 +97,12 @@ export type Database = {
           product_name: string | null
           product_price_range: string | null
           published_date: string
+          raw_information: string | null
           read_time: string
+          section_how_it_works: string | null
+          section_what_is_it: string | null
+          section_who_is_it_for: string | null
+          section_why_different: string | null
           slug: string
           title: string
           updated_at: string
@@ -130,7 +135,12 @@ export type Database = {
           product_name?: string | null
           product_price_range?: string | null
           published_date?: string
+          raw_information?: string | null
           read_time?: string
+          section_how_it_works?: string | null
+          section_what_is_it?: string | null
+          section_who_is_it_for?: string | null
+          section_why_different?: string | null
           slug: string
           title: string
           updated_at?: string
@@ -163,7 +173,12 @@ export type Database = {
           product_name?: string | null
           product_price_range?: string | null
           published_date?: string
+          raw_information?: string | null
           read_time?: string
+          section_how_it_works?: string | null
+          section_what_is_it?: string | null
+          section_who_is_it_for?: string | null
+          section_why_different?: string | null
           slug?: string
           title?: string
           updated_at?: string
