@@ -12,6 +12,10 @@ import UseAtHome from "./pages/UseAtHome";
 import BusinessHub from "./pages/BusinessHub";
 import VideosHub from "./pages/VideosHub";
 import EditionTemplate from "./pages/EditionTemplate";
+import AdminLogin from "./pages/AdminLogin";
+import AdminEditionsList from "./pages/AdminEditionsList";
+import AdminEditionForm from "./pages/AdminEditionForm";
+import ProtectedRoute from "./components/admin/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +36,11 @@ const App = () => (
             <Route path="/business" element={<BusinessHub />} />
             <Route path="/videos" element={<VideosHub />} />
             <Route path="/editions/:slug" element={<EditionTemplate />} />
+            {/* Admin routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/editions" element={<ProtectedRoute><AdminEditionsList /></ProtectedRoute>} />
+            <Route path="/admin/editions/new" element={<ProtectedRoute><AdminEditionForm /></ProtectedRoute>} />
+            <Route path="/admin/editions/:id/edit" element={<ProtectedRoute><AdminEditionForm /></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
