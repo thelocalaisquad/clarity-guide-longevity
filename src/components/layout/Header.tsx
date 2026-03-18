@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import BannerAd from "./BannerAd";
+
 import ExpertDialog from "./ExpertDialog";
 
 const navItems = [
