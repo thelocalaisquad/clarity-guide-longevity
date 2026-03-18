@@ -1,27 +1,53 @@
 
-# Replace Banner Ad with Text Strapline
 
-## What Changes
+# Edition Creator Admin Page
 
-Replace the current image-based banner ad (`BannerAd.tsx`) with a styled text strapline targeting gym owners.
+## Overview
+Build a password-protected admin page where you can create and manage edition content through a structured form, with live preview. Editions will be stored in the database and rendered dynamically at `/editions/:slug`.
 
-**Content:**
-- Headline: "How The Best Gyms Are Quietly Becoming Longevity Hubs (and adding $10-50k a month)"
-- CTA button: "Free Training"
+## What gets built
 
-## Design Approach
+### 1. Database: `editions` table
+A new table storing all edition fields currently hardcoded in the template:
+- Core fields: number, slug, title, category, date, author, read_time
+- Content fields: meta_description, lead_summary, lead_summary_plain, body_html
+- Video fields: video_embed_url, video_caption, video_title
+- Expert fields: expert_name, expert_title, expert_credential, expert_photo_url
+- Product fields: product_name, product_description, product_price_range, product_image_url, product_cta_url
+- FAQs: stored as JSONB array
+- SEO: canonical_url, og_image
+- Status: draft/published flag
+- Timestamps: created_at, updated_at
 
-- Full-width dark background strip (matching the editorial black-and-white aesthetic)
-- Headline in serif font for editorial authority
-- "Free Training" as a compact, high-contrast CTA button on the right
-- Responsive: stacks vertically on mobile, inline on desktop
-- Links to `/business` (or an external training link -- will use `#` as placeholder)
+RLS: Public read for published editions. Authentication required for insert/update/delete.
 
-## Technical Details
+### 2. Authentication
+Simple email/password login for admin access (no public signup). Required since the database uses RLS.
 
-**File modified:** `src/components/layout/BannerAd.tsx`
+### 3. Admin Edition Creator page (`/admin/editions`)
+A structured form with sections matching the edition template:
+- **Edition basics** -- number, title, slug (auto-generated from title), category dropdown, date, author, read time
+- **Lead summary** -- rich text area for the summary
+- **Video** -- embed URL, caption, title fields
+- **Expert callout** -- name, title, credential, photo URL
+- **Body content** -- HTML text area for main article body
+- **Product spotlight** -- name, description, price range, image URL, CTA link
+- **FAQs** -- dynamic add/remove FAQ pairs
+- **SEO** -- meta description, OG image URL
+- **Status** -- draft/published toggle
+- **Live preview** button to see how the edition will look
 
-- Remove the image import (`banner-ad.jpg`)
-- Replace with a flex layout containing the strapline text and a CTA button
-- Keep the same component name and export so `Header.tsx` needs no changes
-- Styling: `bg-foreground text-background` for the dark strip, serif headline, sans-serif button with uppercase tracking to match site conventions
+### 4. Dynamic Edition Template
+Update `EditionTemplate.tsx` to fetch edition data from the database by slug instead of using hardcoded data. Show 404 for missing editions.
+
+### 5. Editions list on admin
+A simple table listing all editions with edit/delete actions.
+
+## Technical details
+
+- **Auth**: Supabase auth with email/password. No auto-confirm (email verification required).
+- **Form**: react-hook-form with zod validation
+- **Routes**: `/admin/login`, `/admin/editions` (list), `/admin/editions/new` (create), `/admin/editions/:id/edit` (edit)
+- **Database migration**: Single migration creating the `editions` table with RLS policies
+- **Edition Template**: Updated to use `useQuery` to fetch from database, with loading/error states
+
