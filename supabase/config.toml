@@ -5,3 +5,18 @@ verify_jwt = false
 
 [functions.send-to-n8n]
 verify_jwt = false
+
+[functions.process-content]
+verify_jwt = false
+
+[functions.generate-newsletter]
+verify_jwt = false
+
+[functions.generate-article]
+verify_jwt = false
+
+[functions.generate-social]
+verify_jwt = false
+
+[functions.trigger-publish-webhook]
+verify_jwt = false
