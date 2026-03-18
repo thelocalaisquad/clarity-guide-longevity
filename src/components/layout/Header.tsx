@@ -6,9 +6,6 @@ import BannerAd from "./BannerAd";
 import ExpertDialog from "./ExpertDialog";
 
 const navItems = [
-  { label: "Use At Home", href: "/products" },
-  { label: "Health and Wellness Businesses", href: "/business" },
-  { label: "Designers and Architects", href: "/designers" },
   { label: "About", href: "/about" },
 ];
 
@@ -19,10 +16,8 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background">
-      {/* Banner ad */}
       <BannerAd />
 
-      {/* Wordmark */}
       <div className="editorial-container flex items-center justify-center py-5 md:py-6">
         <div className="text-center">
           <Link
@@ -40,7 +35,6 @@ const Header = () => {
 
       <div className="h-px bg-border" />
 
-      {/* Nav row */}
       <div className="editorial-wide flex h-12 items-center justify-between">
         <nav className="hidden items-center gap-6 lg:gap-8 md:flex">
           {navItems.map((item) => (
@@ -49,10 +43,7 @@ const Header = () => {
               to={item.href}
               className={cn(
                 "text-[0.65rem] font-semibold uppercase tracking-[0.16em] transition-colors hover:text-foreground whitespace-nowrap",
-                location.pathname === item.href ||
-                  (item.href !== "/" && location.pathname.startsWith(item.href))
-                  ? "text-foreground"
-                  : "text-muted-foreground"
+                location.pathname === item.href ? "text-foreground" : "text-muted-foreground"
               )}
             >
               {item.label}
@@ -75,7 +66,6 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Mobile toggle */}
         <button
           className="md:hidden text-foreground ml-4"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -87,7 +77,6 @@ const Header = () => {
 
       <div className="h-px bg-border" />
 
-      {/* Mobile nav */}
       {mobileOpen && (
         <nav className="border-b border-border bg-background px-6 py-6 md:hidden">
           {navItems.map((item) => (
@@ -105,6 +94,13 @@ const Header = () => {
               {item.label}
             </Link>
           ))}
+          <Link
+            to="/products"
+            onClick={() => setMobileOpen(false)}
+            className="block py-3 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-foreground transition-colors"
+          >
+            Shop Now
+          </Link>
           <button
             onClick={() => { setMobileOpen(false); setExpertOpen(true); }}
             className="block py-3 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-primary transition-colors"
