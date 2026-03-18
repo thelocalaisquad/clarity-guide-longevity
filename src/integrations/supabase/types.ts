@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_log: {
+        Row: {
+          action_type: string
+          created_at: string
+          details: string | null
+          id: string
+          job_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          job_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          job_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_log_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "content_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comparison_page_technologies: {
         Row: {
           comparison_page_id: string
@@ -70,6 +105,216 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      content_briefs: {
+        Row: {
+          angles: Json | null
+          approved: boolean
+          article_angle: string | null
+          created_at: string
+          headline_options: Json | null
+          id: string
+          job_id: string
+          key_insights: Json | null
+          key_quotes: Json | null
+          newsletter_angle: string | null
+          social_hooks: Json | null
+          summary: string | null
+          version: number
+        }
+        Insert: {
+          angles?: Json | null
+          approved?: boolean
+          article_angle?: string | null
+          created_at?: string
+          headline_options?: Json | null
+          id?: string
+          job_id: string
+          key_insights?: Json | null
+          key_quotes?: Json | null
+          newsletter_angle?: string | null
+          social_hooks?: Json | null
+          summary?: string | null
+          version?: number
+        }
+        Update: {
+          angles?: Json | null
+          approved?: boolean
+          article_angle?: string | null
+          created_at?: string
+          headline_options?: Json | null
+          id?: string
+          job_id?: string
+          key_insights?: Json | null
+          key_quotes?: Json | null
+          newsletter_angle?: string | null
+          social_hooks?: Json | null
+          summary?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_briefs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "content_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_jobs: {
+        Row: {
+          content_type: string
+          created_at: string
+          guest_name: string | null
+          id: string
+          internal_notes: string | null
+          owner_id: string | null
+          primary_cta_label: string | null
+          primary_cta_url: string | null
+          product_name: string | null
+          secondary_cta_label: string | null
+          secondary_cta_url: string | null
+          status: string
+          tags: string[] | null
+          target_audience: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content_type?: string
+          created_at?: string
+          guest_name?: string | null
+          id?: string
+          internal_notes?: string | null
+          owner_id?: string | null
+          primary_cta_label?: string | null
+          primary_cta_url?: string | null
+          product_name?: string | null
+          secondary_cta_label?: string | null
+          secondary_cta_url?: string | null
+          status?: string
+          tags?: string[] | null
+          target_audience?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content_type?: string
+          created_at?: string
+          guest_name?: string | null
+          id?: string
+          internal_notes?: string | null
+          owner_id?: string | null
+          primary_cta_label?: string | null
+          primary_cta_url?: string | null
+          product_name?: string | null
+          secondary_cta_label?: string | null
+          secondary_cta_url?: string | null
+          status?: string
+          tags?: string[] | null
+          target_audience?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      content_outputs: {
+        Row: {
+          approved: boolean
+          body: string | null
+          channel: string
+          created_at: string
+          id: string
+          job_id: string
+          meta_description: string | null
+          meta_title: string | null
+          output_group: string
+          slug: string | null
+          title: string | null
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          approved?: boolean
+          body?: string | null
+          channel?: string
+          created_at?: string
+          id?: string
+          job_id: string
+          meta_description?: string | null
+          meta_title?: string | null
+          output_group?: string
+          slug?: string | null
+          title?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          approved?: boolean
+          body?: string | null
+          channel?: string
+          created_at?: string
+          id?: string
+          job_id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          output_group?: string
+          slug?: string | null
+          title?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_outputs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "content_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_sources: {
+        Row: {
+          created_at: string
+          id: string
+          job_id: string
+          research_notes: string | null
+          source_status: string
+          transcript_file_url: string | null
+          transcript_text: string | null
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          job_id: string
+          research_notes?: string | null
+          source_status?: string
+          transcript_file_url?: string | null
+          transcript_text?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          job_id?: string
+          research_notes?: string | null
+          source_status?: string
+          transcript_file_url?: string | null
+          transcript_text?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_sources_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "content_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       editions: {
         Row: {
@@ -298,6 +543,111 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      publishing_jobs: {
+        Row: {
+          created_at: string
+          destination: string
+          error_message: string | null
+          id: string
+          job_id: string
+          output_id: string | null
+          payload_json: Json | null
+          response_body: string | null
+          response_code: number | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          destination: string
+          error_message?: string | null
+          id?: string
+          job_id: string
+          output_id?: string | null
+          payload_json?: Json | null
+          response_body?: string | null
+          response_code?: number | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          destination?: string
+          error_message?: string | null
+          id?: string
+          job_id?: string
+          output_id?: string | null
+          payload_json?: Json | null
+          response_body?: string | null
+          response_code?: number | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publishing_jobs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "content_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publishing_jobs_output_id_fkey"
+            columns: ["output_id"]
+            isOneToOne: false
+            referencedRelation: "content_outputs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publishing_targets: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          name: string
+          target_type: string
+          webhook_url: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name: string
+          target_type?: string
+          webhook_url?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name?: string
+          target_type?: string
+          webhook_url?: string | null
+        }
+        Relationships: []
+      }
       technologies: {
         Row: {
           created_at: string
@@ -337,6 +687,24 @@ export type Database = {
           operator_use?: string | null
           slug?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -411,10 +779,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_editor_or_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "editor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -541,6 +916,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "editor"],
+    },
   },
 } as const
