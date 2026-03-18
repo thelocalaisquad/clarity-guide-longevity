@@ -71,6 +71,108 @@ export type Database = {
         }
         Relationships: []
       }
+      editions: {
+        Row: {
+          author: string
+          body_html: string | null
+          canonical_url: string | null
+          category: string
+          created_at: string
+          edition_number: string
+          expert_credential: string | null
+          expert_name: string | null
+          expert_photo_url: string | null
+          expert_title: string | null
+          faqs: Json | null
+          id: string
+          is_published: boolean
+          lead_summary: string | null
+          lead_summary_plain: string | null
+          meta_description: string | null
+          og_image: string | null
+          product_cta_url: string | null
+          product_description: string | null
+          product_image_alt: string | null
+          product_image_url: string | null
+          product_name: string | null
+          product_price_range: string | null
+          published_date: string
+          read_time: string
+          slug: string
+          title: string
+          updated_at: string
+          video_caption: string | null
+          video_embed_url: string | null
+          video_title: string | null
+        }
+        Insert: {
+          author?: string
+          body_html?: string | null
+          canonical_url?: string | null
+          category?: string
+          created_at?: string
+          edition_number: string
+          expert_credential?: string | null
+          expert_name?: string | null
+          expert_photo_url?: string | null
+          expert_title?: string | null
+          faqs?: Json | null
+          id?: string
+          is_published?: boolean
+          lead_summary?: string | null
+          lead_summary_plain?: string | null
+          meta_description?: string | null
+          og_image?: string | null
+          product_cta_url?: string | null
+          product_description?: string | null
+          product_image_alt?: string | null
+          product_image_url?: string | null
+          product_name?: string | null
+          product_price_range?: string | null
+          published_date?: string
+          read_time?: string
+          slug: string
+          title: string
+          updated_at?: string
+          video_caption?: string | null
+          video_embed_url?: string | null
+          video_title?: string | null
+        }
+        Update: {
+          author?: string
+          body_html?: string | null
+          canonical_url?: string | null
+          category?: string
+          created_at?: string
+          edition_number?: string
+          expert_credential?: string | null
+          expert_name?: string | null
+          expert_photo_url?: string | null
+          expert_title?: string | null
+          faqs?: Json | null
+          id?: string
+          is_published?: boolean
+          lead_summary?: string | null
+          lead_summary_plain?: string | null
+          meta_description?: string | null
+          og_image?: string | null
+          product_cta_url?: string | null
+          product_description?: string | null
+          product_image_alt?: string | null
+          product_image_url?: string | null
+          product_name?: string | null
+          product_price_range?: string | null
+          published_date?: string
+          read_time?: string
+          slug?: string
+          title?: string
+          updated_at?: string
+          video_caption?: string | null
+          video_embed_url?: string | null
+          video_title?: string | null
+        }
+        Relationships: []
+      }
       operator_page_technologies: {
         Row: {
           operator_page_id: string
