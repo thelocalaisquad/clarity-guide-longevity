@@ -147,8 +147,8 @@ const AdminEditionForm = () => {
     setSaving(true);
     const payload = {
       ...values,
-      faqs: values.faqs as unknown as Record<string, unknown>[],
-    };
+      faqs: values.faqs as unknown as { question: string; answer: string }[],
+    } as any;
 
     let error;
     if (isEdit) {
