@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import Layout from "@/components/layout/Layout";
+import EditionBreadcrumb from "@/components/edition/EditionBreadcrumb";
 import EditionHeader from "@/components/edition/EditionHeader";
 import EditionByline from "@/components/edition/EditionByline";
 import EditionVideo from "@/components/edition/EditionVideo";
@@ -14,6 +15,7 @@ import EditionSocialGenerator from "@/components/edition/EditionSocialGenerator"
 const edition = {
   number: "001",
   date: "March 16, 2026",
+  dateIso: "2026-03-16",
   category: "Recovery",
   title: "The Science Behind Infrared Saunas: What the Evidence Actually Shows",
   metaDescription:
@@ -25,6 +27,8 @@ const edition = {
   videoCaption: "Watch: How infrared wavelengths penetrate tissue and stimulate cellular repair.",
   videoTitle: "Infrared Sauna Science Explained",
   leadSummary: `<strong>Infrared saunas aren't just a wellness trend — they're backed by a growing body of peer-reviewed evidence.</strong> In this edition we break down the mechanisms, review the strongest clinical studies, and tell you exactly what to look for if you're considering one for home use. No hype, just data.`,
+  leadSummaryPlain:
+    "Infrared saunas aren't just a wellness trend — they're backed by a growing body of peer-reviewed evidence. In this edition we break down the mechanisms, review the strongest clinical studies, and tell you exactly what to look for if you're considering one for home use. No hype, just data.",
   expert: {
     name: "Dr. Sarah Mitchell",
     title: "PhD, Exercise Physiology — Stanford University",
@@ -80,21 +84,36 @@ const EditionTemplate = () => (
       <title>{edition.title} | Longevity Channel 1</title>
       <meta name="description" content={edition.metaDescription} />
       <link rel="canonical" href={edition.canonicalUrl} />
+
+      {/* Open Graph — article-specific */}
       <meta property="og:title" content={edition.title} />
       <meta property="og:description" content={edition.metaDescription} />
       <meta property="og:type" content="article" />
       <meta property="og:image" content={edition.ogImage} />
       <meta property="og:url" content={edition.canonicalUrl} />
+      <meta property="og:site_name" content="Longevity Channel 1" />
+      <meta property="article:published_time" content={edition.dateIso} />
+      <meta property="article:modified_time" content={edition.dateIso} />
+      <meta property="article:author" content={edition.author} />
+      <meta property="article:section" content={edition.category} />
+      <meta property="article:tag" content={edition.category} />
+
+      {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={edition.title} />
       <meta name="twitter:description" content={edition.metaDescription} />
+      <meta name="twitter:image" content={edition.ogImage} />
+
+      {/* Robots — ensure AI crawlers can index */}
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     </Helmet>
 
     <EditionJsonLd
       title={edition.title}
       description={edition.metaDescription}
       author={edition.author}
-      datePublished="2026-03-16"
+      datePublished={edition.dateIso}
+      dateModified={edition.dateIso}
       canonicalUrl={edition.canonicalUrl}
       imageUrl={edition.ogImage}
       videoEmbedUrl={edition.videoEmbedUrl}
@@ -104,9 +123,15 @@ const EditionTemplate = () => (
       productPriceLow="5299"
       productPriceHigh="6499"
       faqs={edition.faqs}
+      editionNumber={edition.number}
+      category={edition.category}
+      readTime={edition.readTime}
     />
 
-    <article>
+    <article itemScope itemType="https://schema.org/Article">
+      {/* Breadcrumb navigation */}
+      <EditionBreadcrumb editionNumber={edition.number} title={edition.title} />
+
       {/* Edition label */}
       <EditionHeader
         editionNumber={edition.number}
@@ -114,17 +139,28 @@ const EditionTemplate = () => (
         category={edition.category}
       />
 
-      {/* H1 */}
+      {/* H1 — marked speakable for AI assistants */}
       <div className="editorial-narrow pb-6 text-center">
-        <h1 className="font-serif text-3xl md:text-4xl lg:text-[2.75rem] font-semibold leading-tight text-foreground">
+        <h1
+          data-speakable="headline"
+          itemProp="headline"
+          className="font-serif text-3xl md:text-4xl lg:text-[2.75rem] font-semibold leading-tight text-foreground"
+        >
           {edition.title}
         </h1>
       </div>
+
+      {/* Hidden microdata for crawlers */}
+      <meta itemProp="datePublished" content={edition.dateIso} />
+      <meta itemProp="dateModified" content={edition.dateIso} />
+      <meta itemProp="author" content={edition.author} />
+      <meta itemProp="image" content={edition.ogImage} />
 
       {/* Byline */}
       <EditionByline
         author={edition.author}
         date={edition.date}
+        dateIso={edition.dateIso}
         readTime={edition.readTime}
       />
 
@@ -134,9 +170,11 @@ const EditionTemplate = () => (
         caption={edition.videoCaption}
       />
 
-      {/* Lead summary */}
+      {/* Lead summary — marked speakable for AI assistants */}
       <div className="editorial-narrow">
         <p
+          data-speakable="summary"
+          itemProp="description"
           className="editorial-prose text-lg leading-relaxed"
           dangerouslySetInnerHTML={{ __html: edition.leadSummary }}
         />
@@ -153,6 +191,7 @@ const EditionTemplate = () => (
 
       {/* Body content */}
       <div
+        itemProp="articleBody"
         className="editorial-narrow editorial-prose prose prose-headings:font-serif prose-headings:text-foreground prose-blockquote:border-l-foreground prose-blockquote:text-foreground/70 prose-blockquote:italic max-w-none"
         dangerouslySetInnerHTML={{ __html: edition.bodyHtml }}
       />
@@ -174,7 +213,7 @@ const EditionTemplate = () => (
     {/* Social Content Generator */}
     <EditionSocialGenerator
       title={edition.title}
-      summary={edition.leadSummary.replace(/<[^>]*>/g, "")}
+      summary={edition.leadSummaryPlain}
       category={edition.category}
       expertName={edition.expert.name}
       expertCredential={edition.expert.credential}

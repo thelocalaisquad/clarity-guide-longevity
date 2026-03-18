@@ -4,10 +4,11 @@ import { toast } from "@/hooks/use-toast";
 interface EditionBylineProps {
   author: string;
   date: string;
+  dateIso?: string;
   readTime: string;
 }
 
-const EditionByline = ({ author, date, readTime }: EditionBylineProps) => {
+const EditionByline = ({ author, date, dateIso, readTime }: EditionBylineProps) => {
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     toast({ title: "Link copied to clipboard" });
@@ -20,7 +21,7 @@ const EditionByline = ({ author, date, readTime }: EditionBylineProps) => {
       <div className="flex items-center gap-3 text-sm text-muted-foreground">
         <span className="font-semibold text-foreground">{author}</span>
         <span className="text-border">|</span>
-        <time>{date}</time>
+        <time dateTime={dateIso || date}>{date}</time>
         <span className="text-border">|</span>
         <span>{readTime} read</span>
       </div>
