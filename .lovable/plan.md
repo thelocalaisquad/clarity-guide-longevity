@@ -1,12 +1,27 @@
 
+# Replace Banner Ad with Text Strapline
 
-# Remove Banner Ad
+## What Changes
 
-Remove the `BannerAd` component from the header so the site opens clean with just the logo and nav.
+Replace the current image-based banner ad (`BannerAd.tsx`) with a styled text strapline targeting gym owners.
 
-## Changes
+**Content:**
+- Headline: "How The Best Gyms Are Quietly Becoming Longevity Hubs (and adding $10-50k a month)"
+- CTA button: "Free Training"
 
-1. **`src/components/layout/Header.tsx`** — Remove the `BannerAd` import and its usage inside the header
-2. **`src/components/layout/BannerAd.tsx`** — Delete the file (no longer needed)
-3. **`src/assets/strapline-bg.jpg`** — Can be removed as it was only used by BannerAd
+## Design Approach
 
+- Full-width dark background strip (matching the editorial black-and-white aesthetic)
+- Headline in serif font for editorial authority
+- "Free Training" as a compact, high-contrast CTA button on the right
+- Responsive: stacks vertically on mobile, inline on desktop
+- Links to `/business` (or an external training link -- will use `#` as placeholder)
+
+## Technical Details
+
+**File modified:** `src/components/layout/BannerAd.tsx`
+
+- Remove the image import (`banner-ad.jpg`)
+- Replace with a flex layout containing the strapline text and a CTA button
+- Keep the same component name and export so `Header.tsx` needs no changes
+- Styling: `bg-foreground text-background` for the dark strip, serif headline, sans-serif button with uppercase tracking to match site conventions
