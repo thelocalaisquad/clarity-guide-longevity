@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle, RefreshCw } from "lucide-react";
+import { useAutosave } from "@/hooks/useAutosave";
+import { CheckCircle, RefreshCw, Save } from "lucide-react";
 
 interface Props { job: any; onRefresh: () => void; }
 
@@ -13,6 +14,7 @@ const StepNewsletter = ({ job, onRefresh }: Props) => {
   const { toast } = useToast();
   const qc = useQueryClient();
   const [generating, setGenerating] = useState(false);
+  const [autosaved, setAutosaved] = useState(false);
 
   const { data: output } = useQuery({
     queryKey: ["content-output-newsletter", job.id],
@@ -32,9 +34,20 @@ const StepNewsletter = ({ job, onRefresh }: Props) => {
   const [body, setBody] = useState("");
   const [title, setTitle] = useState("");
 
-  useState(() => {
-    if (output) { setBody(output.body || ""); setTitle(output.title || ""); }
-  });
+  // Sync from fetched data
+  useEffect(() => {
+    if (output) {
+      setBody(output.body || "");
+      setTitle(output.title || "");
+    }
+  }, [output]);
+
+  // Autosave
+  useAutosave(async () => {
+    if (!output) return;
+    await supabase.from("content_outputs").update({ title, body }).eq("id", output.id);
+    setAutosaved(true);
+  }, [title, body], 3000);
 
   const handleGenerate = async () => {
     setGenerating(true);
@@ -69,9 +82,10 @@ const StepNewsletter = ({ job, onRefresh }: Props) => {
 
   return (
     <div className="space-y-4">
-      {output.approved && <div className="flex items-center gap-2 text-emerald-600 text-sm"><CheckCircle className="h-4 w-4" /> Approved</div>}
-      <div className="space-y-2"><Label>Headline</Label><Textarea value={title || output.title || ""} onChange={(e) => setTitle(e.target.value)} rows={2} /></div>
-      <div className="space-y-2"><Label>Body</Label><Textarea value={body || output.body || ""} onChange={(e) => setBody(e.target.value)} rows={16} /></div>
+      {autosaved && <div className="flex items-center gap-2 text-xs text-muted-foreground"><Save className="h-3 w-3" /> Autosaved</div>}
+      {output.approved && <div className="flex items-center gap-2 text-sm" style={{ color: "hsl(var(--primary))" }}><CheckCircle className="h-4 w-4" /> Approved</div>}
+      <div className="space-y-2"><Label>Headline</Label><Textarea value={title} onChange={(e) => { setTitle(e.target.value); setAutosaved(false); }} rows={2} /></div>
+      <div className="space-y-2"><Label>Body</Label><Textarea value={body} onChange={(e) => { setBody(e.target.value); setAutosaved(false); }} rows={16} /></div>
       <div className="flex gap-3 pt-4 border-t">
         <Button onClick={handleSave}>Save Approved Version</Button>
         <Button variant="outline" onClick={handleGenerate} disabled={generating}>
