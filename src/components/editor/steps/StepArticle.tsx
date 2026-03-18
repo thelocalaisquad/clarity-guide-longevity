@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle, RefreshCw } from "lucide-react";
+import { useAutosave } from "@/hooks/useAutosave";
+import { CheckCircle, RefreshCw, Save } from "lucide-react";
 
 interface Props { job: any; onRefresh: () => void; }
 
@@ -14,6 +15,7 @@ const StepArticle = ({ job, onRefresh }: Props) => {
   const { toast } = useToast();
   const qc = useQueryClient();
   const [generating, setGenerating] = useState(false);
+  const [autosaved, setAutosaved] = useState(false);
 
   const { data: output } = useQuery({
     queryKey: ["content-output-article", job.id],
@@ -32,9 +34,29 @@ const StepArticle = ({ job, onRefresh }: Props) => {
 
   const [form, setForm] = useState({ title: "", body: "", meta_title: "", meta_description: "", slug: "" });
 
-  useState(() => {
-    if (output) setForm({ title: output.title || "", body: output.body || "", meta_title: output.meta_title || "", meta_description: output.meta_description || "", slug: output.slug || "" });
-  });
+  useEffect(() => {
+    if (output) {
+      setForm({
+        title: output.title || "",
+        body: output.body || "",
+        meta_title: output.meta_title || "",
+        meta_description: output.meta_description || "",
+        slug: output.slug || "",
+      });
+    }
+  }, [output]);
+
+  const set = (k: string, v: string) => {
+    setForm((f) => ({ ...f, [k]: v }));
+    setAutosaved(false);
+  };
+
+  // Autosave
+  useAutosave(async () => {
+    if (!output) return;
+    await supabase.from("content_outputs").update(form).eq("id", output.id);
+    setAutosaved(true);
+  }, [form.title, form.body, form.meta_title, form.meta_description, form.slug], 3000);
 
   const handleGenerate = async () => {
     setGenerating(true);
@@ -67,16 +89,15 @@ const StepArticle = ({ job, onRefresh }: Props) => {
     );
   }
 
-  const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
-
   return (
     <div className="space-y-4">
-      {output.approved && <div className="flex items-center gap-2 text-emerald-600 text-sm"><CheckCircle className="h-4 w-4" /> Approved</div>}
-      <div className="space-y-2"><Label>SEO Title</Label><Input value={form.meta_title || output.meta_title || ""} onChange={(e) => set("meta_title", e.target.value)} /></div>
-      <div className="space-y-2"><Label>Slug</Label><Input value={form.slug || output.slug || ""} onChange={(e) => set("slug", e.target.value)} /></div>
-      <div className="space-y-2"><Label>Meta Description</Label><Textarea value={form.meta_description || output.meta_description || ""} onChange={(e) => set("meta_description", e.target.value)} rows={2} /></div>
-      <div className="space-y-2"><Label>Title</Label><Input value={form.title || output.title || ""} onChange={(e) => set("title", e.target.value)} /></div>
-      <div className="space-y-2"><Label>Article Body</Label><Textarea value={form.body || output.body || ""} onChange={(e) => set("body", e.target.value)} rows={20} /></div>
+      {autosaved && <div className="flex items-center gap-2 text-xs text-muted-foreground"><Save className="h-3 w-3" /> Autosaved</div>}
+      {output.approved && <div className="flex items-center gap-2 text-sm" style={{ color: "hsl(var(--primary))" }}><CheckCircle className="h-4 w-4" /> Approved</div>}
+      <div className="space-y-2"><Label>SEO Title</Label><Input value={form.meta_title} onChange={(e) => set("meta_title", e.target.value)} /></div>
+      <div className="space-y-2"><Label>Slug</Label><Input value={form.slug} onChange={(e) => set("slug", e.target.value)} /></div>
+      <div className="space-y-2"><Label>Meta Description</Label><Textarea value={form.meta_description} onChange={(e) => set("meta_description", e.target.value)} rows={2} /></div>
+      <div className="space-y-2"><Label>Title</Label><Input value={form.title} onChange={(e) => set("title", e.target.value)} /></div>
+      <div className="space-y-2"><Label>Article Body</Label><Textarea value={form.body} onChange={(e) => set("body", e.target.value)} rows={20} /></div>
       <div className="flex gap-3 pt-4 border-t">
         <Button onClick={handleApprove}>Approve</Button>
         <Button variant="outline" onClick={handleGenerate} disabled={generating}>

@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle, RefreshCw } from "lucide-react";
+import { CheckCircle, RefreshCw, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAutosave } from "@/hooks/useAutosave";
 
 interface Props { job: any; onRefresh: () => void; }
 
@@ -94,6 +95,7 @@ const StepSocial = ({ job, onRefresh }: Props) => {
 
       {currentOutput ? (
         <ChannelEditor
+          key={`${activeTab}-${currentOutput.id}`}
           channel={activeTab}
           output={currentOutput}
           onSave={(body) => handleSave(activeTab, body)}
@@ -123,11 +125,26 @@ function ChannelEditor({ channel, output, onSave, onApprove, onRegenerate, gener
   channel: string; output: any; onSave: (body: string) => void; onApprove: () => void; onRegenerate: () => void; generating: boolean;
 }) {
   const [body, setBody] = useState(output.body || "");
+  const [autosaved, setAutosaved] = useState(false);
+
+  useEffect(() => {
+    setBody(output.body || "");
+    setAutosaved(false);
+  }, [output.id, output.body]);
+
+  // Autosave
+  useAutosave(async () => {
+    if (output) {
+      await supabase.from("content_outputs").update({ body }).eq("id", output.id);
+      setAutosaved(true);
+    }
+  }, [body], 3000);
 
   return (
     <div className="space-y-4">
-      {output.approved && <div className="flex items-center gap-2 text-emerald-600 text-sm"><CheckCircle className="h-4 w-4" /> Approved</div>}
-      <Textarea value={body} onChange={(e) => setBody(e.target.value)} rows={10} />
+      {autosaved && <div className="flex items-center gap-2 text-xs text-muted-foreground"><Save className="h-3 w-3" /> Autosaved</div>}
+      {output.approved && <div className="flex items-center gap-2 text-sm" style={{ color: "hsl(var(--primary))" }}><CheckCircle className="h-4 w-4" /> Approved</div>}
+      <Textarea value={body} onChange={(e) => { setBody(e.target.value); setAutosaved(false); }} rows={10} />
       <div className="flex gap-3">
         <Button size="sm" onClick={() => onSave(body)}>Save</Button>
         {!output.approved && <Button size="sm" variant="outline" onClick={onApprove}>Approve</Button>}
