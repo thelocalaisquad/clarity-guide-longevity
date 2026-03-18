@@ -4,6 +4,7 @@ import { toast } from "@/hooks/use-toast";
 interface EditionBylineProps {
   author: string;
   date: string;
+  dateIso?: string;
   readTime: string;
 }
 
