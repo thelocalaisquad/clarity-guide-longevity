@@ -47,6 +47,12 @@ const editionSchema = z.object({
   og_image: z.string().optional(),
   is_published: z.boolean(),
   faqs: z.array(faqSchema),
+  // Structured sections
+  raw_information: z.string().optional(),
+  section_what_is_it: z.string().optional(),
+  section_how_it_works: z.string().optional(),
+  section_why_different: z.string().optional(),
+  section_who_is_it_for: z.string().optional(),
 });
 
 type EditionFormData = z.infer<typeof editionSchema>;
@@ -92,12 +98,16 @@ const AdminEditionForm = () => {
       og_image: "",
       is_published: false,
       faqs: [],
+      raw_information: "",
+      section_what_is_it: "",
+      section_how_it_works: "",
+      section_why_different: "",
+      section_who_is_it_for: "",
     },
   });
 
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "faqs" });
 
-  // Auto-generate slug from title
   const watchTitle = form.watch("title");
   useEffect(() => {
     if (!isEdit && watchTitle) {
@@ -105,7 +115,6 @@ const AdminEditionForm = () => {
     }
   }, [watchTitle, isEdit, form]);
 
-  // Load existing edition for edit
   useEffect(() => {
     if (!id) return;
     (async () => {
@@ -138,6 +147,11 @@ const AdminEditionForm = () => {
         product_cta_url: data.product_cta_url ?? "",
         canonical_url: data.canonical_url ?? "",
         og_image: data.og_image ?? "",
+        raw_information: data.raw_information ?? "",
+        section_what_is_it: data.section_what_is_it ?? "",
+        section_how_it_works: data.section_how_it_works ?? "",
+        section_why_different: data.section_why_different ?? "",
+        section_who_is_it_for: data.section_who_is_it_for ?? "",
         faqs,
       });
     })();
@@ -166,16 +180,20 @@ const AdminEditionForm = () => {
     }
   };
 
-  const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  const Section = ({ title, children, step }: { title: string; children: React.ReactNode; step?: string }) => (
     <fieldset className="space-y-4 border border-border rounded-sm p-4">
-      <legend className="font-serif text-lg font-semibold text-foreground px-2">{title}</legend>
+      <legend className="font-serif text-lg font-semibold text-foreground px-2">
+        {step && <span className="text-muted-foreground mr-2">{step}</span>}
+        {title}
+      </legend>
       {children}
     </fieldset>
   );
 
-  const Field = ({ label, children, span }: { label: string; children: React.ReactNode; span?: boolean }) => (
+  const Field = ({ label, children, span, hint }: { label: string; children: React.ReactNode; span?: boolean; hint?: string }) => (
     <div className={span ? "col-span-full" : ""}>
       <Label className="mb-1.5 block text-sm">{label}</Label>
+      {hint && <p className="text-xs text-muted-foreground mb-1.5">{hint}</p>}
       {children}
     </div>
   );
@@ -192,8 +210,120 @@ const AdminEditionForm = () => {
       </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Basics */}
-        <Section title="Edition Basics">
+
+        {/* Step 1 — Core Content */}
+        <Section title="Core Content" step="1">
+          <p className="text-sm text-muted-foreground -mt-2">The raw inputs you always upload: video, source material, and product.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <Field label="Video Embed URL" span>
+              <Input {...form.register("video_embed_url")} placeholder="https://www.youtube.com/embed/…" />
+            </Field>
+            <Field label="Video Title">
+              <Input {...form.register("video_title")} />
+            </Field>
+            <Field label="Video Caption">
+              <Input {...form.register("video_caption")} />
+            </Field>
+          </div>
+
+          <Field label="Raw Information / Research Notes" span hint="Paste your source material, research, or rough notes here. This won't be published — it's your reference.">
+            <Textarea rows={8} {...form.register("raw_information")} placeholder="Paste research, data, interview notes…" className="font-mono text-xs" />
+          </Field>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Field label="Product Name">
+              <Input {...form.register("product_name")} />
+            </Field>
+            <Field label="Product Price Range">
+              <Input {...form.register("product_price_range")} placeholder="$5,299 – $6,499" />
+            </Field>
+            <Field label="Product Description" span>
+              <Textarea rows={3} {...form.register("product_description")} />
+            </Field>
+            <Field label="Product Image URL">
+              <Input {...form.register("product_image_url")} />
+            </Field>
+            <Field label="Product Image Alt Text">
+              <Input {...form.register("product_image_alt")} />
+            </Field>
+            <Field label="Product CTA URL" span>
+              <Input {...form.register("product_cta_url")} placeholder="https://…" />
+            </Field>
+          </div>
+        </Section>
+
+        {/* Step 2 — Structured Sections */}
+        <Section title="Structured Sections" step="2">
+          <p className="text-sm text-muted-foreground -mt-2">The newsletter body — written in a consistent format every time.</p>
+
+          <Field label="Lead Summary (HTML)" span hint="The bold opening paragraph shown at the top of the edition.">
+            <Textarea rows={4} {...form.register("lead_summary")} placeholder="<strong>Bold opener…</strong> rest of summary" />
+          </Field>
+          <Field label="Lead Summary (Plain text)" span hint="Plain text version for social sharing and previews.">
+            <Textarea rows={3} {...form.register("lead_summary_plain")} placeholder="Plain text version for social sharing" />
+          </Field>
+
+          <Field label="What Is It?" span hint="Introduce the technology or product. What does it do?">
+            <Textarea rows={5} {...form.register("section_what_is_it")} placeholder="<p>This is a…</p>" />
+          </Field>
+          <Field label="How It Works" span hint="Explain the mechanism. How does the science or technology work?">
+            <Textarea rows={5} {...form.register("section_how_it_works")} placeholder="<p>It works by…</p>" />
+          </Field>
+          <Field label="Why Is It Different?" span hint="What sets this apart from alternatives? Why should readers care?">
+            <Textarea rows={5} {...form.register("section_why_different")} placeholder="<p>Unlike other approaches…</p>" />
+          </Field>
+          <Field label="Who Is It For?" span hint="Target audiences — home users, gym owners, clinics, biohackers…">
+            <Textarea rows={5} {...form.register("section_who_is_it_for")} placeholder="<p>This is ideal for…</p>" />
+          </Field>
+
+          <Field label="Legacy Body (HTML)" span hint="Optional fallback. If structured sections above are filled, they take priority.">
+            <Textarea rows={6} {...form.register("body_html")} placeholder="<h2>Section…</h2><p>…</p>" className="font-mono text-xs" />
+          </Field>
+        </Section>
+
+        {/* Step 3 — Expert + FAQs */}
+        <Section title="Expert + FAQs" step="3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Field label="Expert Name">
+              <Input {...form.register("expert_name")} />
+            </Field>
+            <Field label="Expert Title / Credentials Line">
+              <Input {...form.register("expert_title")} />
+            </Field>
+            <Field label="Expert Quote / Credential" span>
+              <Textarea rows={2} {...form.register("expert_credential")} />
+            </Field>
+            <Field label="Expert Photo URL">
+              <Input {...form.register("expert_photo_url")} />
+            </Field>
+          </div>
+
+          <div className="border-t border-border pt-4 mt-4">
+            <Label className="text-sm font-semibold block mb-3">FAQs</Label>
+            {fields.map((field, index) => (
+              <div key={field.id} className="grid grid-cols-1 gap-2 border-b border-border pb-4 mb-4">
+                <div className="flex justify-between items-start">
+                  <Field label={`Question ${index + 1}`} span>
+                    <Input {...form.register(`faqs.${index}.question`)} />
+                  </Field>
+                  <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} className="mt-5 ml-2 shrink-0">
+                    <Trash2 size={14} />
+                  </Button>
+                </div>
+                <Field label="Answer" span>
+                  <Textarea rows={2} {...form.register(`faqs.${index}.answer`)} />
+                </Field>
+              </div>
+            ))}
+            <Button type="button" variant="outline" size="sm" onClick={() => append({ question: "", answer: "" })}>
+              <Plus size={14} /> Add FAQ
+            </Button>
+          </div>
+        </Section>
+
+        {/* Step 4 — Metadata & SEO */}
+        <Section title="Metadata & SEO" step="4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Field label="Edition Number">
               <Input {...form.register("edition_number")} placeholder="001" />
@@ -224,107 +354,8 @@ const AdminEditionForm = () => {
               <Label>Published</Label>
             </div>
           </div>
-        </Section>
 
-        {/* Lead Summary */}
-        <Section title="Lead Summary">
-          <Field label="Lead Summary (HTML)" span>
-            <Textarea rows={4} {...form.register("lead_summary")} placeholder="<strong>Bold opener…</strong> rest of summary" />
-          </Field>
-          <Field label="Lead Summary (Plain text)" span>
-            <Textarea rows={3} {...form.register("lead_summary_plain")} placeholder="Plain text version for social sharing" />
-          </Field>
-        </Section>
-
-        {/* Video */}
-        <Section title="Video">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Field label="Embed URL" span>
-              <Input {...form.register("video_embed_url")} placeholder="https://www.youtube.com/embed/…" />
-            </Field>
-            <Field label="Video Title">
-              <Input {...form.register("video_title")} />
-            </Field>
-            <Field label="Caption">
-              <Input {...form.register("video_caption")} />
-            </Field>
-          </div>
-        </Section>
-
-        {/* Expert */}
-        <Section title="Expert Callout">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Field label="Name">
-              <Input {...form.register("expert_name")} />
-            </Field>
-            <Field label="Title / Credentials Line">
-              <Input {...form.register("expert_title")} />
-            </Field>
-            <Field label="Quote / Credential" span>
-              <Textarea rows={2} {...form.register("expert_credential")} />
-            </Field>
-            <Field label="Photo URL">
-              <Input {...form.register("expert_photo_url")} />
-            </Field>
-          </div>
-        </Section>
-
-        {/* Body */}
-        <Section title="Body Content">
-          <Field label="Article Body (HTML)" span>
-            <Textarea rows={12} {...form.register("body_html")} placeholder="<h2>Section…</h2><p>…</p>" className="font-mono text-xs" />
-          </Field>
-        </Section>
-
-        {/* Product */}
-        <Section title="Product Spotlight">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Field label="Product Name">
-              <Input {...form.register("product_name")} />
-            </Field>
-            <Field label="Price Range">
-              <Input {...form.register("product_price_range")} placeholder="$5,299 – $6,499" />
-            </Field>
-            <Field label="Description" span>
-              <Textarea rows={3} {...form.register("product_description")} />
-            </Field>
-            <Field label="Image URL">
-              <Input {...form.register("product_image_url")} />
-            </Field>
-            <Field label="Image Alt Text">
-              <Input {...form.register("product_image_alt")} />
-            </Field>
-            <Field label="CTA URL" span>
-              <Input {...form.register("product_cta_url")} placeholder="https://…" />
-            </Field>
-          </div>
-        </Section>
-
-        {/* FAQs */}
-        <Section title="FAQs">
-          {fields.map((field, index) => (
-            <div key={field.id} className="grid grid-cols-1 gap-2 border-b border-border pb-4 mb-4">
-              <div className="flex justify-between items-start">
-                <Field label={`Question ${index + 1}`} span>
-                  <Input {...form.register(`faqs.${index}.question`)} />
-                </Field>
-                <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} className="mt-5 ml-2 shrink-0">
-                  <Trash2 size={14} />
-                </Button>
-              </div>
-              <Field label="Answer" span>
-                <Textarea rows={2} {...form.register(`faqs.${index}.answer`)} />
-              </Field>
-            </div>
-          ))}
-          <Button type="button" variant="outline" size="sm" onClick={() => append({ question: "", answer: "" })}>
-            <Plus size={14} /> Add FAQ
-          </Button>
-        </Section>
-
-        {/* SEO */}
-        <Section title="SEO">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-border pt-4 mt-4">
             <Field label="Meta Description" span>
               <Textarea rows={2} {...form.register("meta_description")} />
             </Field>
