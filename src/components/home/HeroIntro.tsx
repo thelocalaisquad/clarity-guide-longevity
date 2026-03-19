@@ -34,7 +34,8 @@ const HeroIntro = () => {
   const [expertOpen, setExpertOpen] = useState(false);
   return (
     <>
-      <section className="pt-8 pb-14 lg:pt-12 lg:pb-20 border-b border-border">
+      <section className="">
+        {/* <section className="pt-8 pb-14 lg:pt-12 lg:pb-20 border-b border-border"> */}
         {/* <div className="editorial-container">
 
       <div className="grid gap-8 lg:grid-cols-[1.4fr_0.6fr]">
