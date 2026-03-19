@@ -37,7 +37,6 @@ const HeroIntro = () => {
       <section className="pt-8 pb-14 lg:pt-12 lg:pb-20 border-b border-border">
         <div className="editorial-container">
           <div className="grid gap-8 lg:grid-cols-[1.4fr_0.6fr]">
-            {/* Featured article with audience CTAs */}
             {/* <div className="group block">
               <div className="relative overflow-hidden rounded-sm aspect-[16/10]">
                 <img
