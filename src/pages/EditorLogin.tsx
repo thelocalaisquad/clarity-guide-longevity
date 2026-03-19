@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Shield, LogIn, UserPlus, KeyRound } from "lucide-react";
 
-const ALLOWED_DOMAIN = "longevitychannelone.com";
+const ALLOWED_DOMAIN = "longevitychannel1.com";
 
 type Mode = "login" | "signup" | "forgot" | "mfa-enroll" | "mfa-verify";
 
