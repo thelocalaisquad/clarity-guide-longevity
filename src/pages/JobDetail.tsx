@@ -9,12 +9,13 @@ import StepBrief from "@/components/editor/steps/StepBrief";
 import StepNewsletter from "@/components/editor/steps/StepNewsletter";
 import StepArticle from "@/components/editor/steps/StepArticle";
 import StepSocial from "@/components/editor/steps/StepSocial";
+import StepVisuals from "@/components/editor/steps/StepVisuals";
 import StepReview from "@/components/editor/steps/StepReview";
 import StepPublish from "@/components/editor/steps/StepPublish";
 import ActivityTimeline from "@/components/editor/ActivityTimeline";
 import { cn } from "@/lib/utils";
 
-const STEPS = ["Intake", "Brief", "Newsletter", "Article", "Social", "Review", "Publish"] as const;
+const STEPS = ["Intake", "Brief", "Newsletter", "Article", "Social", "Visuals", "Review", "Publish"] as const;
 
 const statusColors: Record<string, string> = {
   new: "bg-blue-100 text-blue-800",
@@ -72,8 +73,9 @@ const JobDetail = () => {
       case 2: return <StepNewsletter job={job} onRefresh={refresh} />;
       case 3: return <StepArticle job={job} onRefresh={refresh} />;
       case 4: return <StepSocial job={job} onRefresh={refresh} />;
-      case 5: return <StepReview job={job} />;
-      case 6: return <StepPublish job={job} onRefresh={refresh} />;
+      case 5: return <StepVisuals job={job} onRefresh={refresh} />;
+      case 6: return <StepReview job={job} />;
+      case 7: return <StepPublish job={job} onRefresh={refresh} />;
       default: return null;
     }
   };

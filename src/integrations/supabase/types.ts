@@ -774,6 +774,69 @@ export type Database = {
         }
         Relationships: []
       }
+      visual_assets: {
+        Row: {
+          approved: boolean
+          created_at: string
+          cta_text: string | null
+          id: string
+          image_url: string | null
+          job_id: string
+          output_image_url: string | null
+          overlay_headline: string | null
+          overlay_subheadline: string | null
+          platform: string
+          related_output_id: string | null
+          template_name: string
+          updated_at: string
+        }
+        Insert: {
+          approved?: boolean
+          created_at?: string
+          cta_text?: string | null
+          id?: string
+          image_url?: string | null
+          job_id: string
+          output_image_url?: string | null
+          overlay_headline?: string | null
+          overlay_subheadline?: string | null
+          platform?: string
+          related_output_id?: string | null
+          template_name?: string
+          updated_at?: string
+        }
+        Update: {
+          approved?: boolean
+          created_at?: string
+          cta_text?: string | null
+          id?: string
+          image_url?: string | null
+          job_id?: string
+          output_image_url?: string | null
+          overlay_headline?: string | null
+          overlay_subheadline?: string | null
+          platform?: string
+          related_output_id?: string | null
+          template_name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visual_assets_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "content_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visual_assets_related_output_id_fkey"
+            columns: ["related_output_id"]
+            isOneToOne: false
+            referencedRelation: "content_outputs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
