@@ -19,15 +19,14 @@ serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
 
-    const { data: claims, error: claimsErr } = await supabase.auth.getClaims(authHeader.replace("Bearer ", ""));
-    if (claimsErr || !claims?.claims) {
+    const { data: { user }, error: userErr } = await supabase.auth.getUser();
+    if (userErr || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const userId = claims.claims.sub as string;
+    const userId = user.id;
     const { job_id } = await req.json();
 
-    // Fetch job + sources
     const adminClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
     const { data: job } = await adminClient.from("content_jobs").select("*").eq("id", job_id).single();
@@ -95,7 +94,6 @@ Create a comprehensive content brief.`;
     const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
     const briefData = toolCall ? JSON.parse(toolCall.function.arguments) : {};
 
-    // Get current max version
     const { data: existing } = await adminClient.from("content_briefs").select("version").eq("job_id", job_id).order("version", { ascending: false }).limit(1);
     const nextVersion = (existing?.[0]?.version || 0) + 1;
 
