@@ -38,9 +38,9 @@ const HeroIntro = () => {
         <div className="editorial-container">
           <div className="grid gap-8 lg:grid-cols-[1.4fr_0.6fr]">
             {/* Featured article with audience CTAs */}
-            <div className="group block">
+            {/* <div className="group block">
               <div className="relative overflow-hidden rounded-sm aspect-[16/10]">
-                {/* <img
+                <img
                   src={heroImage}
                   alt="Infrared sauna cabin with warm ambient lighting — longevity technology for home and business"
                   className="absolute inset-0 h-full w-full object-cover"
@@ -71,8 +71,8 @@ const HeroIntro = () => {
                       Talk to an Expert
                     </button>
                   </div>
-                </div> */}
-              </div>
+                </div>
+              </div> */}
             </div>
 
             {/* Sidebar */}
