@@ -541,8 +541,8 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
                     {asset.platform} · {asset.template_name}
                   </span>
                   {asset.approved ? (
-                    <Badge className="bg-emerald-100 text-emerald-800 text-[10px]">
-                      Approved
+                    <Badge variant="outline" className="text-[10px] font-medium">
+                      ✓ Approved
                     </Badge>
                   ) : (
                     <Button
