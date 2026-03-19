@@ -38,7 +38,7 @@ const HeroIntro = () => {
         <div className="editorial-container">
           <div className="grid gap-8 lg:grid-cols-[1.4fr_0.6fr]">
             {/* Featured article with audience CTAs */}
-            <div className="group block">
+            {/* <div className="group block">
               <div className="relative overflow-hidden rounded-sm aspect-[16/10]">
                 <img
                   src={heroImage}
@@ -72,7 +72,7 @@ const HeroIntro = () => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Sidebar */}
