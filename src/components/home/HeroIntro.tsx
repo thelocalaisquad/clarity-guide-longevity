@@ -34,55 +34,54 @@ const HeroIntro = () => {
   const [expertOpen, setExpertOpen] = useState(false);
   return (
     <>
-      <section className="pt-8 pb-2 lg:pt-2 lg:pb-2 border-b border-border">
+      <section className="pt-8 pb-14 lg:pt-12 lg:pb-20 border-b border-border">
         <div className="editorial-container">
-          <div className="grid gap-8 lg:grid-cols-[1.4fr_0.6fr]">
-            {/* <div className="group block">
-              <div className="relative overflow-hidden rounded-sm aspect-[16/10]">
-                <img
-                  src={heroImage}
-                  alt="Infrared sauna cabin with warm ambient lighting — longevity technology for home and business"
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
+          {/* <div className="grid gap-8 lg:grid-cols-[1.4fr_0.6fr]">
+        <div className="group block">
+          <div className="relative overflow-hidden rounded-sm aspect-[16/10]">
+            <img
+            src={heroImage}
+            alt="Infrared sauna cabin with warm ambient lighting — longevity technology for home and business"
+            className="absolute inset-0 h-full w-full object-cover" />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
-                  <h1 className="font-serif text-2xl font-semibold leading-[1.2] text-background md:text-3xl lg:text-[2.5rem]">
-                    Advanced Longevity Technology &amp; Wellness Devices{" "}
-                    <em className="font-normal">— for Home Use and Business</em>
-                  </h1>
-                  <p className="mt-3 max-w-lg text-sm leading-relaxed text-background/70 md:text-[0.95rem]">
-                    The only place to see exactly what longevity technologies are available, how they work, and how to
-                    use them for yourself or for your business.
-                  </p>
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+              <h1 className="font-serif text-2xl font-semibold leading-[1.2] text-background md:text-3xl lg:text-[2.5rem]">
+                Advanced Longevity Technology &amp; Wellness Devices{" "}
+                <em className="font-normal">
+                  — for Home Use and Business
+                </em>
+              </h1>
+              <p className="mt-3 max-w-lg text-sm leading-relaxed text-background/70 md:text-[0.95rem]">
+                The only place to see exactly what longevity technologies are available, how they work, and how to use them for yourself or for your business.
+              </p>
 
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <Link
-                      to="/products"
-                      className="inline-flex items-center justify-center h-12 px-8 bg-background text-foreground text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/90 transition-colors"
-                    >
-                      Shop Now
-                    </Link>
-                    <button
-                      onClick={() => setExpertOpen(true)}
-                      className="inline-flex items-center justify-center h-12 px-8 border border-background text-background text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/10 transition-colors"
-                    >
-                      Talk to an Expert
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-
-            {/* Sidebar */}
-            <div className="space-y-3">
-              {sidebarItems.map((item) => (
+              <div className="mt-6 flex flex-wrap gap-3">
                 <Link
-                  key={item.slug}
-                  to={item.href}
-                  className="group block relative overflow-hidden rounded-sm transition-all hover:shadow-lg hover:shadow-foreground/10"
+                  to="/products"
+                  className="inline-flex items-center justify-center h-12 px-8 bg-background text-foreground text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/90 transition-colors"
                 >
-                  {/* <div className="relative aspect-[16/9] overflow-hidden">
+                  Shop Now
+                </Link>
+                <button
+                  onClick={() => setExpertOpen(true)}
+                  className="inline-flex items-center justify-center h-12 px-8 border border-background text-background text-sm font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-background/10 transition-colors"
+                >
+                  Talk to an Expert
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {sidebarItems.map((item) =>
+          <Link
+            key={item.slug}
+            to={item.href}
+            className="group block relative overflow-hidden rounded-sm transition-all hover:shadow-lg hover:shadow-foreground/10">
+
+              <div className="relative aspect-[16/9] overflow-hidden">
                 <img
                   src={item.image}
                   alt={`${item.category} — ${item.title}`}
@@ -96,11 +95,11 @@ const HeroIntro = () => {
                     {item.title}
                   </p>
                 </div>
-              </div> */}
-                </Link>
-              ))}
-            </div>
-          </div>
+              </div>
+            </Link>
+          )}
+        </div>
+      </div> */}
         </div>
       </section>
       <ExpertDialog open={expertOpen} onOpenChange={setExpertOpen} />
