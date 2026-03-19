@@ -73,8 +73,9 @@ const JobDetail = () => {
       case 2: return <StepNewsletter job={job} onRefresh={refresh} />;
       case 3: return <StepArticle job={job} onRefresh={refresh} />;
       case 4: return <StepSocial job={job} onRefresh={refresh} />;
-      case 5: return <StepReview job={job} />;
-      case 6: return <StepPublish job={job} onRefresh={refresh} />;
+      case 5: return <StepVisuals job={job} onRefresh={refresh} />;
+      case 6: return <StepReview job={job} />;
+      case 7: return <StepPublish job={job} onRefresh={refresh} />;
       default: return null;
     }
   };
