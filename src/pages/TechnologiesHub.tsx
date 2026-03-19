@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import Layout from "@/components/layout/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -7,6 +8,8 @@ import heroImage from "@/assets/hero-sauna.jpg";
 import redlightImage from "@/assets/editorial-redlight.jpg";
 import facilityImage from "@/assets/editorial-facility.jpg";
 import wellnessImage from "@/assets/editorial-wellness.jpg";
+
+const SITE_URL = "https://clarity-guide-longevity.lovable.app";
 
 const techImages: Record<string, string> = {
   "infrared-sauna": heroImage,
@@ -29,15 +32,34 @@ const TechnologiesHub = () => {
     },
   });
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Technologies", item: `${SITE_URL}/technologies` },
+    ],
+  };
+
   return (
     <Layout>
-      {/* Header section */}
+      <Helmet>
+        <title>Longevity Technologies — Infrared, Cryo, Hyperbaric & More | Longevity Channel 1</title>
+        <meta name="description" content="Explore longevity technologies: infrared saunas, red light therapy, cryotherapy, hyperbaric oxygen, PEMF and more — evidence-based guides for home and business." />
+        <link rel="canonical" href={`${SITE_URL}/technologies`} />
+      </Helmet>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       <section className="py-16 lg:py-24">
         <div className="editorial-container">
           <span className="editorial-label">Explore</span>
           <div className="editorial-divider mt-4" />
           <h1 className="mt-6 font-serif text-3xl font-semibold text-foreground md:text-5xl max-w-2xl leading-tight">
-            Technologies
+            Longevity Technologies
           </h1>
           <p className="mt-5 max-w-xl text-base text-muted-foreground leading-relaxed">
             Each technology is examined through the same structured lens: what it is, how it works,
@@ -46,7 +68,6 @@ const TechnologiesHub = () => {
         </div>
       </section>
 
-      {/* Card grid */}
       <section className="pb-20 lg:pb-28">
         <div className="editorial-container">
           {isLoading ? (
@@ -57,7 +78,6 @@ const TechnologiesHub = () => {
             </div>
           ) : (
             <>
-              {/* Featured first item */}
               {technologies && technologies.length > 0 && (
                 <Link
                   to={`/technologies/${technologies[0].slug}`}
@@ -67,8 +87,9 @@ const TechnologiesHub = () => {
                     <div className="relative aspect-[4/3] md:aspect-auto">
                       <img
                         src={techImages[technologies[0].slug] || facilityImage}
-                        alt={technologies[0].name}
+                        alt={`${technologies[0].name} — longevity technology overview`}
                         className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                        loading="lazy"
                       />
                     </div>
                     <div className="flex flex-col justify-center p-8 lg:p-12">
@@ -87,7 +108,6 @@ const TechnologiesHub = () => {
                 </Link>
               )}
 
-              {/* Remaining as image cards */}
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {technologies?.slice(1).map((tech) => (
                   <Link
@@ -98,8 +118,9 @@ const TechnologiesHub = () => {
                     <div className="relative aspect-[4/3]">
                       <img
                         src={techImages[tech.slug] || facilityImage}
-                        alt={tech.name}
+                        alt={`${tech.name} — longevity technology for home and commercial use`}
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                        loading="lazy"
                       />
                     </div>
                     <div className="p-5">

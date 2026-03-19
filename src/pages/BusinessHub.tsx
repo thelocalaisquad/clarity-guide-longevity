@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import Layout from "@/components/layout/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight, Building2, Dumbbell, Hotel, Stethoscope, ShieldCheck, Calculator, BookOpen, FileText } from "lucide-react";
@@ -7,6 +8,8 @@ import heroImage from "@/assets/hero-sauna.jpg";
 import facilityImage from "@/assets/editorial-facility.jpg";
 import redlightImage from "@/assets/editorial-redlight.jpg";
 import wellnessImage from "@/assets/editorial-wellness.jpg";
+
+const SITE_URL = "https://clarity-guide-longevity.lovable.app";
 
 const businessTypes = [
   { label: "Medspa / Clinic", icon: Building2, desc: "Aesthetic treatments & wellness programs" },
@@ -73,14 +76,34 @@ const BusinessHub = () => {
     },
   });
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Business", item: `${SITE_URL}/business` },
+    ],
+  };
+
   return (
     <Layout>
+      <Helmet>
+        <title>Longevity Technology for Business — Gyms, Clinics, Hotels & Spas | Longevity Channel 1</title>
+        <meta name="description" content="Add longevity technology to your gym, medspa, hotel or clinic. Commercial equipment guides, ROI calculators, implementation plans and operator case studies." />
+        <link rel="canonical" href={`${SITE_URL}/business`} />
+      </Helmet>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="relative aspect-[16/7] md:aspect-[16/6]">
           <img
             src={facilityImage}
-            alt="Modern wellness facility"
+            alt="Modern wellness facility with longevity technology equipment"
             className="absolute inset-0 h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/40 to-foreground/10" />
@@ -88,8 +111,8 @@ const BusinessHub = () => {
             <div className="editorial-container">
               <span className="editorial-label text-background/60">For Business</span>
               <h1 className="mt-3 font-serif text-3xl font-semibold text-background md:text-5xl lg:text-[3.5rem] leading-tight max-w-3xl">
-                Bring Longevity Technology{" "}
-                <em className="font-normal">to Your Clients</em>
+                Longevity Technology for Business{" "}
+                <em className="font-normal">— Gyms, Clinics, Hotels &amp; Spas</em>
               </h1>
               <p className="mt-4 text-base text-background/70 max-w-xl md:text-lg">
                 Medspas · Physiotherapy · Gyms · Hotels
@@ -103,11 +126,11 @@ const BusinessHub = () => {
       <section className="py-14 lg:py-20 border-b border-border">
         <div className="editorial-container">
           <h2 className="font-serif text-2xl font-semibold text-foreground md:text-3xl text-center mb-10">
-            WHAT TYPE <em className="font-normal">of business are you?</em>
+            What Type <em className="font-normal">of Business Are You?</em>
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {businessTypes.map((bt) => (
-              <button
+              <div
                 key={bt.label}
                 className="group rounded-sm border border-border bg-card p-6 text-left transition-all hover:shadow-lg hover:shadow-foreground/5 hover:border-foreground/20"
               >
@@ -116,7 +139,7 @@ const BusinessHub = () => {
                   {bt.label}
                 </h3>
                 <p className="mt-1.5 text-sm text-muted-foreground">{bt.desc}</p>
-              </button>
+              </div>
             ))}
           </div>
         </div>
@@ -125,6 +148,9 @@ const BusinessHub = () => {
       {/* Four Key Sections */}
       <section className="py-14 lg:py-20 border-b border-border">
         <div className="editorial-container">
+          <h2 className="font-serif text-2xl font-semibold text-foreground md:text-3xl text-center mb-10">
+            Everything You Need to Get Started
+          </h2>
           <div className="grid gap-8 md:grid-cols-2">
             {sections.map((s, i) => (
               <div
@@ -134,8 +160,9 @@ const BusinessHub = () => {
                 <div className={`relative overflow-hidden ${i % 2 === 0 ? "aspect-[4/3]" : "aspect-[3/2]"}`}>
                   <img
                     src={s.image}
-                    alt={s.title}
+                    alt={`${s.title} — commercial longevity technology resources`}
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    loading="lazy"
                   />
                 </div>
                 <div className="p-6 lg:p-8">
@@ -168,7 +195,7 @@ const BusinessHub = () => {
         <section className="py-14 lg:py-20 border-b border-border">
           <div className="editorial-container">
             <h2 className="font-serif text-2xl font-semibold text-foreground md:text-3xl text-center mb-10">
-              OPERATOR <em className="font-normal">guides</em>
+              Operator Guides
             </h2>
             <div className="grid gap-5 md:grid-cols-2">
               {pages.map((page, index) => (
@@ -200,7 +227,7 @@ const BusinessHub = () => {
       <section className="py-14 lg:py-20 border-b border-border">
         <div className="editorial-container">
           <h2 className="font-serif text-2xl font-semibold text-foreground md:text-3xl text-center mb-10">
-            CASE <em className="font-normal">studies</em>
+            Case Studies
           </h2>
           <div className="grid gap-5 md:grid-cols-3">
             {caseStudies.map((cs) => (
@@ -208,8 +235,9 @@ const BusinessHub = () => {
                 <div className="relative overflow-hidden aspect-[4/3]">
                   <img
                     src={cs.image}
-                    alt={cs.title}
+                    alt={`Case study: ${cs.title}`}
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    loading="lazy"
                   />
                 </div>
                 <div className="p-5">

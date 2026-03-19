@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://clarity-guide-longevity.lovable.app/sitemap.xml
