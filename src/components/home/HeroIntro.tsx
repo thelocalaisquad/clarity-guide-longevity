@@ -38,7 +38,7 @@ const HeroIntro = () => {
         <div className="editorial-container">
           <div className="grid gap-8 lg:grid-cols-[1.4fr_0.6fr]">
             {/* Featured article with audience CTAs */}
-            {/* <div className="group block">
+            <div className="group block">
               <div className="relative overflow-hidden rounded-sm aspect-[16/10]">
                 <img
                   src={heroImage}
@@ -72,7 +72,7 @@ const HeroIntro = () => {
                     </button>
                   </div>
                 </div>
-              </div> */}
+              </div>
             </div>
 
             {/* Sidebar */}
@@ -83,8 +83,8 @@ const HeroIntro = () => {
                   to={item.href}
                   className="group block relative overflow-hidden rounded-sm transition-all hover:shadow-lg hover:shadow-foreground/10"
                 >
-                  <div className="relative aspect-[16/9] overflow-hidden">
-                    {/* <img
+                  {/* <div className="relative aspect-[16/9] overflow-hidden">
+                <img
                   src={item.image}
                   alt={`${item.category} — ${item.title}`}
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />
@@ -96,8 +96,8 @@ const HeroIntro = () => {
                   <p className="mt-2 text-sm leading-relaxed text-background/70">
                     {item.title}
                   </p>
-                </div> */}
-                  </div>
+                </div>
+              </div> */}
                 </Link>
               ))}
             </div>
