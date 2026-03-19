@@ -328,7 +328,7 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
       approved: approve,
     };
 
-    const { error } = await supabase.from("visual_assets").insert(payload as any);
+    const { error } = await (supabase as any).from("visual_assets").insert(payload);
     if (error) {
       toast({ title: "Save failed", description: error.message, variant: "destructive" });
     } else {
