@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.trigger-publish-webhook]
 verify_jwt = false
+
+[functions.generate-hashtags]
+verify_jwt = false
