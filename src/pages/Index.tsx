@@ -4,10 +4,33 @@ import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/layout/Layout";
 import EditionSubscribe from "@/components/edition/EditionSubscribe";
+import HeroIntro from "@/components/home/HeroIntro";
+
+const SITE_URL = "https://clarity-guide-longevity.lovable.app";
 
 const formatDate = (dateStr: string) => {
   const d = new Date(dateStr + "T00:00:00");
   return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Longevity Channel 1",
+  url: SITE_URL,
+  logo: `${SITE_URL}/favicon.png`,
+  description:
+    "Evidence-based longevity science. Expert-reviewed guides on infrared saunas, red light therapy, cold plunge, and more.",
+  sameAs: [],
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Longevity Channel 1",
+  url: SITE_URL,
+  description:
+    "Advanced longevity technology and wellness devices for home use and business operators.",
 };
 
 const Index = () => {
@@ -30,9 +53,21 @@ const Index = () => {
   return (
     <Layout>
       <Helmet>
-        <title>Longevity Channel 1 — Longevity Technology Newsletter</title>
-        <meta name="description" content="Expert-led newsletters on longevity technology for homes, clinics, and wellness businesses." />
+        <title>Longevity Channel 1 — Advanced Longevity Technology & Wellness Devices</title>
+        <meta name="description" content="Shop and explore advanced longevity technology and wellness devices — infrared saunas, red light therapy, hyperbaric chambers, cryotherapy and more for home and business." />
+        <link rel="canonical" href={SITE_URL} />
       </Helmet>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
+
+      <HeroIntro />
 
       {isLoading && (
         <div className="editorial-narrow py-24 text-center text-muted-foreground">
@@ -43,14 +78,18 @@ const Index = () => {
       {/* Latest edition — hero feature */}
       {latest && (
         <section className="editorial-wide py-12 md:py-16">
+          <h2 className="font-serif text-xl font-semibold text-foreground mb-8">
+            Latest Edition
+          </h2>
           <Link to={`/editions/${latest.slug}`} className="group block">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               {latest.og_image && latest.og_image !== "/placeholder.svg" ? (
                 <div className="aspect-video overflow-hidden rounded-sm bg-muted">
                   <img
                     src={latest.og_image}
-                    alt={latest.title}
+                    alt={`${latest.title} — ${latest.category} edition`}
                     className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                    loading="lazy"
                   />
                 </div>
               ) : (
@@ -66,9 +105,9 @@ const Index = () => {
                   <span>{latest.category}</span>
                 </div>
 
-                <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight text-foreground group-hover:text-foreground/80 transition-colors">
+                <h3 className="font-serif text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight text-foreground group-hover:text-foreground/80 transition-colors">
                   {latest.title}
-                </h2>
+                </h3>
 
                 {latest.lead_summary_plain && (
                   <p className="text-muted-foreground leading-relaxed line-clamp-3">
@@ -110,8 +149,9 @@ const Index = () => {
                   <div className="aspect-video overflow-hidden rounded-sm bg-muted">
                     <img
                       src={edition.og_image}
-                      alt={edition.title}
+                      alt={`${edition.title} — ${edition.category} newsletter`}
                       className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                      loading="lazy"
                     />
                   </div>
                 ) : (

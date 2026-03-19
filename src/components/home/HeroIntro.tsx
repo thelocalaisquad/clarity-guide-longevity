@@ -43,18 +43,17 @@ const HeroIntro = () => {
           <div className="relative overflow-hidden rounded-sm aspect-[16/10]">
             <img
             src={heroImage}
-            alt="Infrared sauna with warm natural light"
+            alt="Infrared sauna cabin with warm ambient lighting — longevity technology for home and business"
             className="absolute inset-0 h-full w-full object-cover" />
 
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
-              <h2 className="font-serif text-2xl font-semibold leading-[1.2] text-background md:text-3xl lg:text-[2.5rem]">
-                Uncovering best longevity technology{" "}
+              <h1 className="font-serif text-2xl font-semibold leading-[1.2] text-background md:text-3xl lg:text-[2.5rem]">
+                Advanced Longevity Technology &amp; Wellness Devices{" "}
                 <em className="font-normal">
-                  — and how to use it at home and in your business.
-                
-              </em>
-              </h2>
+                  — for Home Use and Business
+                </em>
+              </h1>
               <p className="mt-3 max-w-lg text-sm leading-relaxed text-background/70 md:text-[0.95rem]">
                 The only place to see exactly what longevity technologies are available, how they work, and how to use them for yourself or for your business.
               </p>
@@ -88,13 +87,13 @@ const HeroIntro = () => {
               <div className="relative aspect-[16/9] overflow-hidden">
                 <img
                   src={item.image}
-                  alt={item.title}
+                  alt={`${item.category} — ${item.title}`}
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]" />
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <h3 className="font-serif text-2xl font-bold leading-tight text-background md:text-3xl">
+                  <h2 className="font-serif text-2xl font-bold leading-tight text-background md:text-3xl">
                     {item.category}
-                  </h3>
+                  </h2>
                   <p className="mt-2 text-sm leading-relaxed text-background/70">
                     {item.title}
                   </p>

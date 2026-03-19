@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import Layout from "@/components/layout/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -8,6 +9,8 @@ import redlightImage from "@/assets/editorial-redlight.jpg";
 import wellnessImage from "@/assets/editorial-wellness.jpg";
 import facilityImage from "@/assets/editorial-facility.jpg";
 import heroImage from "@/assets/hero-sauna.jpg";
+
+const SITE_URL = "https://clarity-guide-longevity.lovable.app";
 
 const categories = [
   {
@@ -69,14 +72,34 @@ const categories = [
 const UseAtHome = () => {
   const [expertOpen, setExpertOpen] = useState(false);
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Use At Home", item: `${SITE_URL}/use-at-home` },
+    ],
+  };
+
   return (
     <Layout>
+      <Helmet>
+        <title>Longevity Technology for Home — Infrared Saunas, Red Light & More | Longevity Channel 1</title>
+        <meta name="description" content="Build your personal longevity environment at home. Browse infrared saunas, red light therapy, cold plunge, hyperbaric chambers and more for residential use." />
+        <link rel="canonical" href={`${SITE_URL}/use-at-home`} />
+      </Helmet>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={heroHomeImage}
-            alt="Modern apartment with integrated longevity technology"
+            alt="Modern apartment with integrated longevity technology — infrared sauna and red light therapy"
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/40 to-foreground/10" />
@@ -89,7 +112,7 @@ const UseAtHome = () => {
             For Your Home
           </span>
           <h1 className="mt-4 font-serif text-4xl font-semibold leading-[1.15] text-background md:text-5xl lg:text-6xl max-w-3xl">
-            Use At Home
+            Longevity Technology for Home Use
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-background/70 md:text-lg">
             Learn how to select, implement and use the right longevity technology
@@ -104,11 +127,11 @@ const UseAtHome = () => {
         </div>
       </section>
 
-      {/* Categories grid — inspired by reference screenshot */}
+      {/* Categories grid */}
       <section className="py-16 lg:py-24">
         <div className="editorial-container">
           <h2 className="font-serif text-2xl font-semibold text-foreground md:text-3xl mb-10">
-            Categories
+            Home Longevity Categories
           </h2>
 
           <div className="grid gap-6 grid-cols-2 md:grid-cols-3">
@@ -121,8 +144,9 @@ const UseAtHome = () => {
                 <div className="relative overflow-hidden rounded-sm aspect-square bg-secondary">
                   <img
                     src={cat.image}
-                    alt={cat.name}
+                    alt={`${cat.name} — ${cat.description}`}
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    loading="lazy"
                   />
                 </div>
                 <h3 className="mt-3 font-serif text-sm font-semibold text-foreground group-hover:text-primary transition-colors md:text-base flex items-center gap-1">

@@ -1,8 +1,11 @@
+import { Helmet } from "react-helmet-async";
 import Layout from "@/components/layout/Layout";
 import { Link } from "react-router-dom";
 import { Play } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
+const SITE_URL = "https://clarity-guide-longevity.lovable.app";
 
 const VideosHub = () => {
   const { data: videos, isLoading } = useQuery({
@@ -24,12 +27,18 @@ const VideosHub = () => {
 
   return (
     <Layout>
+      <Helmet>
+        <title>Longevity Technology Videos — Expert Guides & Demos | Longevity Channel 1</title>
+        <meta name="description" content="Watch expert video guides on longevity technology — infrared saunas, cryotherapy, hyperbaric chambers. See how devices work, installation demos, and session walkthroughs." />
+        <link rel="canonical" href={`${SITE_URL}/videos`} />
+      </Helmet>
+
       <section className="py-16 lg:py-24">
         <div className="editorial-container">
           <span className="editorial-label">Watch</span>
           <div className="editorial-divider mt-4" />
           <h1 className="mt-6 font-serif text-3xl font-semibold text-foreground md:text-5xl max-w-2xl leading-tight">
-            Videos
+            Longevity Technology Videos
           </h1>
           <p className="mt-5 max-w-xl text-base text-muted-foreground leading-relaxed">
             Visual explanations of longevity technologies — how they work, 
@@ -48,7 +57,6 @@ const VideosHub = () => {
             </div>
           ) : (
             <>
-              {/* Featured first video */}
               {videos && videos.length > 0 && (
                 <Link
                   to={`/videos/${videos[0].slug}`}
@@ -59,7 +67,7 @@ const VideosHub = () => {
                       {videos[0].youtube_url && (
                         <img
                           src={`https://img.youtube.com/vi/${getYouTubeId(videos[0].youtube_url)}/maxresdefault.jpg`}
-                          alt={videos[0].title}
+                          alt={`Video: ${videos[0].title} — longevity technology demonstration`}
                           className="absolute inset-0 h-full w-full object-cover"
                           loading="lazy"
                         />
@@ -90,7 +98,6 @@ const VideosHub = () => {
                 </Link>
               )}
 
-              {/* Remaining videos */}
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {videos?.slice(1).map((video) => (
                   <Link
@@ -102,7 +109,7 @@ const VideosHub = () => {
                       {video.youtube_url && (
                         <img
                           src={`https://img.youtube.com/vi/${getYouTubeId(video.youtube_url)}/mqdefault.jpg`}
-                          alt={video.title}
+                          alt={`Video: ${video.title} — longevity technology guide`}
                           className="h-full w-full object-cover"
                           loading="lazy"
                         />
@@ -117,9 +124,9 @@ const VideosHub = () => {
                       {video.audience_label && (
                         <span className="editorial-label text-primary">{video.audience_label}</span>
                       )}
-                      <h2 className="mt-2 font-serif text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                      <h3 className="mt-2 font-serif text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
                         {video.title}
-                      </h2>
+                      </h3>
                       {video.summary && (
                         <p className="mt-2 text-sm text-muted-foreground line-clamp-2 leading-relaxed">
                           {video.summary}

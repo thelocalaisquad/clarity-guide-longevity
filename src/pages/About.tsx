@@ -1,7 +1,14 @@
+import { Helmet } from "react-helmet-async";
 import Layout from "@/components/layout/Layout";
 
 const About = () => (
   <Layout>
+    <Helmet>
+      <title>About Longevity Channel 1 — Our Mission & Approach</title>
+      <meta name="description" content="Learn how Longevity Channel 1 evaluates longevity technology for home users and wellness businesses — from infrared saunas to hyperbaric chambers." />
+      <link rel="canonical" href="https://clarity-guide-longevity.lovable.app/about" />
+    </Helmet>
+
     <article className="editorial-container py-16 md:py-24">
       {/* Page title */}
       <header className="max-w-3xl mx-auto text-center mb-16 md:mb-24">
@@ -42,7 +49,6 @@ const About = () => (
           </div>
         </section>
 
-        {/* The Gap */}
         <section>
           <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-6">
             The Gap Between Innovation and Understanding
@@ -69,7 +75,6 @@ const About = () => (
           </div>
         </section>
 
-        {/* What We Do */}
         <section>
           <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-6">
             What We Do
@@ -122,7 +127,6 @@ const About = () => (
           </div>
         </section>
 
-        {/* From Hardware to Business Model */}
         <section>
           <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-6">
             From Hardware to Business Model
@@ -155,7 +159,6 @@ const About = () => (
           </div>
         </section>
 
-        {/* Why This Matters Now */}
         <section>
           <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-6">
             Why This Matters Now
@@ -179,7 +182,6 @@ const About = () => (
           </div>
         </section>
 
-        {/* Our Mission */}
         <section className="border-t border-border pt-14">
           <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-6">
             Our Mission

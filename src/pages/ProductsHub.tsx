@@ -1,8 +1,11 @@
+import { Helmet } from "react-helmet-async";
 import Layout from "@/components/layout/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
+const SITE_URL = "https://clarity-guide-longevity.lovable.app";
 
 const ProductsHub = () => {
   const { data: products, isLoading } = useQuery({
@@ -20,14 +23,34 @@ const ProductsHub = () => {
   const homeProducts = products?.filter(p => !p.is_commercial) || [];
   const commercialProducts = products?.filter(p => p.is_commercial) || [];
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Products", item: `${SITE_URL}/products` },
+    ],
+  };
+
   return (
     <Layout>
+      <Helmet>
+        <title>Longevity Technology Products — Home & Commercial | Longevity Channel 1</title>
+        <meta name="description" content="Browse longevity technology products for home and commercial use — infrared saunas, red light therapy panels, hyperbaric chambers, cryotherapy units and more." />
+        <link rel="canonical" href={`${SITE_URL}/products`} />
+      </Helmet>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       <section className="py-16 lg:py-24">
         <div className="editorial-container">
           <span className="editorial-label">Evaluate</span>
           <div className="editorial-divider mt-4" />
           <h1 className="mt-6 font-serif text-3xl font-semibold text-foreground md:text-5xl max-w-2xl leading-tight">
-            Products
+            Longevity Technology Products
           </h1>
           <p className="mt-5 max-w-xl text-base text-muted-foreground leading-relaxed">
             Descriptive, non-promotional evaluations of longevity technology products — 
@@ -49,7 +72,7 @@ const ProductsHub = () => {
               {/* Home products */}
               {homeProducts.length > 0 && (
                 <div>
-                  <span className="editorial-label">For Home Use</span>
+                  <h2 className="font-serif text-2xl font-semibold text-foreground mb-6">For Home Use</h2>
                   <div className="mt-6 grid gap-6 md:grid-cols-2">
                     {homeProducts.map((product) => (
                       <Link
@@ -62,9 +85,9 @@ const ProductsHub = () => {
                             <span className="inline-block rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
                               Home
                             </span>
-                            <h2 className="mt-4 font-serif text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                            <h3 className="mt-4 font-serif text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
                               {product.name}
-                            </h2>
+                            </h3>
                             {product.technologies && (
                               <span className="mt-1 block text-xs text-muted-foreground">
                                 {(product.technologies as any).name}
@@ -87,7 +110,7 @@ const ProductsHub = () => {
               {/* Commercial products */}
               {commercialProducts.length > 0 && (
                 <div>
-                  <span className="editorial-label">For Commercial Use</span>
+                  <h2 className="font-serif text-2xl font-semibold text-foreground mb-6">For Commercial Use</h2>
                   <div className="mt-6 grid gap-6 md:grid-cols-2">
                     {commercialProducts.map((product) => (
                       <Link
@@ -100,9 +123,9 @@ const ProductsHub = () => {
                             <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                               Commercial
                             </span>
-                            <h2 className="mt-4 font-serif text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                            <h3 className="mt-4 font-serif text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
                               {product.name}
-                            </h2>
+                            </h3>
                             {product.technologies && (
                               <span className="mt-1 block text-xs text-muted-foreground">
                                 {(product.technologies as any).name}
