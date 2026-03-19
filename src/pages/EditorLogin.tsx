@@ -34,11 +34,9 @@ const EditorLogin = () => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const { data: { totp } } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-        if (totp) {
-          // Has MFA — check assurance level
-          const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-          if (aal?.currentLevel === "aal1" && aal?.nextLevel === "aal2") {
+      const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+        if (aal) {
+          if (aal.currentLevel === "aal1" && aal.nextLevel === "aal2") {
             // Needs to complete MFA challenge
             await startMfaChallenge();
           } else if (aal?.currentLevel === "aal2") {
