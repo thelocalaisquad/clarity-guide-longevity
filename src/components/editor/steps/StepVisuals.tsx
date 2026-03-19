@@ -61,7 +61,7 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
   const { data: assets } = useQuery({
     queryKey: ["visual-assets", job.id],
     queryFn: async () => {
-      const { data } = await supabase
+      const { data } = await (supabase as any)
         .from("visual_assets")
         .select("*")
         .eq("job_id", job.id)
