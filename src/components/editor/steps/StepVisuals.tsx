@@ -345,7 +345,7 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
   };
 
   const handleApproveExisting = async (assetId: string) => {
-    await supabase.from("visual_assets").update({ approved: true } as any).eq("id", assetId);
+    await (supabase as any).from("visual_assets").update({ approved: true }).eq("id", assetId);
     toast({ title: "Visual approved" });
     qc.invalidateQueries({ queryKey: ["visual-assets", job.id] });
   };
