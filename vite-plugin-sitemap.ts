@@ -27,13 +27,10 @@ async function fetchTable(supabaseUrl: string, anonKey: string, table: string, s
   const url = `${supabaseUrl}/rest/v1/${table}?select=${select}${filters ? '&' + filters : ''}`;
   try {
     const res = await fetch(url, {
-      headers: {
-        apikey: anonKey,
-        Authorization: `Bearer ${anonKey}`,
-      },
+      headers: { apikey: anonKey, Authorization: `Bearer ${anonKey}` },
     });
     if (!res.ok) return [];
-    return await res.json();
+    return (await res.json()) as any[];
   } catch {
     return [];
   }
