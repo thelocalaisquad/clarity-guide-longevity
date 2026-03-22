@@ -25,10 +25,10 @@ interface Props {
 }
 
 const TEMPLATES = [
-  { key: "center", label: "Center Headline", icon: "⊞" },
-  { key: "top_cta", label: "Top + CTA Strip", icon: "▬" },
-  { key: "side_panel", label: "Side Panel", icon: "◧" },
-  { key: "quote", label: "Quote Overlay", icon: "❝" },
+  { key: "editorial", label: "Editorial", icon: "📰" },
+  { key: "banner", label: "Banner Strip", icon: "▬" },
+  { key: "split", label: "Split Frame", icon: "◧" },
+  { key: "quote", label: "Expert Quote", icon: "❝" },
 ] as const;
 
 const PLATFORMS = [
