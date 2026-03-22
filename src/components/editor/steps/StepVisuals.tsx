@@ -53,7 +53,7 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
   const [selectedHeadline, setSelectedHeadline] = useState("");
   const [subheadline, setSubheadline] = useState("");
   const [ctaText, setCtaText] = useState(job.primary_cta_label || "Learn More");
-  const [template, setTemplate] = useState<TemplateKey>("center");
+  const [template, setTemplate] = useState<TemplateKey>("editorial");
   const [platform, setPlatform] = useState<PlatformKey>("linkedin");
   const [saving, setSaving] = useState(false);
 
