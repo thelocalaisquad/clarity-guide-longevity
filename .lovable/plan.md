@@ -1,27 +1,36 @@
 
-# Replace Banner Ad with Text Strapline
 
-## What Changes
+## Plan: Fix Three Editorial Workflow Issues
 
-Replace the current image-based banner ad (`BannerAd.tsx`) with a styled text strapline targeting gym owners.
+### Issue 1: Missing Social Platforms (Facebook, TikTok, Pinterest)
 
-**Content:**
-- Headline: "How The Best Gyms Are Quietly Becoming Longevity Hubs (and adding $10-50k a month)"
-- CTA button: "Free Training"
+**Current state:** The social step only has 6 channels: LinkedIn, X Thread, Instagram, Reddit, Quote Card, Clip Titles. Facebook, TikTok, and Pinterest are missing.
 
-## Design Approach
+**Fix:**
+- Add `facebook`, `tiktok`, and `pinterest` to the `CHANNELS` array in `StepSocial.tsx`
+- Add the same channels to the `CHANNELS` array in `generate-social/index.ts` edge function
+- Redeploy the edge function
 
-- Full-width dark background strip (matching the editorial black-and-white aesthetic)
-- Headline in serif font for editorial authority
-- "Free Training" as a compact, high-contrast CTA button on the right
-- Responsive: stacks vertically on mobile, inline on desktop
-- Links to `/business` (or an external training link -- will use `#` as placeholder)
+### Issue 2: Visuals Not Generating
 
-## Technical Details
+**Current state:** The `transcripts` storage bucket is **private** (not public). The visuals step uploads images to this bucket and then calls `getPublicUrl()` — but since the bucket is private, the returned URL won't actually serve the image. The canvas `img.onload` never fires, so no preview renders.
 
-**File modified:** `src/components/layout/BannerAd.tsx`
+**Fix:**
+- Switch image uploads in `StepVisuals.tsx` to use `createSignedUrl()` instead of `getPublicUrl()` so images load correctly from the private bucket
+- This will allow the canvas to render the preview properly
 
-- Remove the image import (`banner-ad.jpg`)
-- Replace with a flex layout containing the strapline text and a CTA button
-- Keep the same component name and export so `Header.tsx` needs no changes
-- Styling: `bg-foreground text-background` for the dark strip, serif headline, sans-serif button with uppercase tracking to match site conventions
+### Issue 3: Video Link Not Included in Newsletter
+
+**Current state:** The `generate-newsletter` edge function fetches `content_jobs` and `content_briefs` but never fetches `content_sources` (where the video URL is stored). The video URL is completely absent from the AI prompt.
+
+**Fix:**
+- In `generate-newsletter/index.ts`, fetch the latest `content_sources` row for the job
+- Include the `video_url` in the AI prompt so the newsletter content references the video
+- Redeploy the edge function
+
+### Files to Modify
+1. `src/components/editor/steps/StepSocial.tsx` — add Facebook, TikTok, Pinterest channels
+2. `supabase/functions/generate-social/index.ts` — add matching channels
+3. `src/components/editor/steps/StepVisuals.tsx` — use signed URLs for image loading
+4. `supabase/functions/generate-newsletter/index.ts` — fetch and include video URL in prompt
+
