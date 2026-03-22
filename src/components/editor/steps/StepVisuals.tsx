@@ -25,10 +25,10 @@ interface Props {
 }
 
 const TEMPLATES = [
-  { key: "center", label: "Center Headline", icon: "⊞" },
-  { key: "top_cta", label: "Top + CTA Strip", icon: "▬" },
-  { key: "side_panel", label: "Side Panel", icon: "◧" },
-  { key: "quote", label: "Quote Overlay", icon: "❝" },
+  { key: "editorial", label: "Editorial", icon: "📰" },
+  { key: "banner", label: "Banner Strip", icon: "▬" },
+  { key: "split", label: "Split Frame", icon: "◧" },
+  { key: "quote", label: "Expert Quote", icon: "❝" },
 ] as const;
 
 const PLATFORMS = [
@@ -53,7 +53,7 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
   const [selectedHeadline, setSelectedHeadline] = useState("");
   const [subheadline, setSubheadline] = useState("");
   const [ctaText, setCtaText] = useState(job.primary_cta_label || "Learn More");
-  const [template, setTemplate] = useState<TemplateKey>("center");
+  const [template, setTemplate] = useState<TemplateKey>("editorial");
   const [platform, setPlatform] = useState<PlatformKey>("linkedin");
   const [saving, setSaving] = useState(false);
 
@@ -156,8 +156,8 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
     if (!ctx) return;
     ctx.scale(2, 2);
 
-    // Background
-    ctx.fillStyle = "#141414";
+    // Light background
+    ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
 
     // Draw product image if available
@@ -165,20 +165,14 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
       const img = new Image();
       img.crossOrigin = "anonymous";
       img.onload = () => {
-        const scale = Math.max(w / img.width, h / img.height);
-        const iw = img.width * scale;
-        const ih = img.height * scale;
-        ctx.drawImage(img, (w - iw) / 2, (h - ih) / 2, iw, ih);
-
-        // Overlay
-        drawOverlay(ctx, w, h);
+        drawWithImage(ctx, w, h, img);
       };
       img.src = imageUrl;
     } else {
       // Placeholder
-      ctx.fillStyle = "#1a1a1a";
+      ctx.fillStyle = "#f5f5f0";
       ctx.fillRect(0, 0, w, h);
-      ctx.fillStyle = "#555";
+      ctx.fillStyle = "#999";
       ctx.font = "14px sans-serif";
       ctx.textAlign = "center";
       ctx.fillText("Upload a product image", w / 2, h / 2);
@@ -186,111 +180,191 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
     }
   };
 
-  const drawOverlay = (ctx: CanvasRenderingContext2D, w: number, h: number) => {
-    if (!selectedHeadline && !subheadline && !ctaText) return;
-
+  const drawWithImage = (ctx: CanvasRenderingContext2D, w: number, h: number, img: HTMLImageElement) => {
     const headline = selectedHeadline || "Your Headline Here";
-    const headlineFontSize = Math.min(w / 12, 40);
-    const subFontSize = Math.min(w / 20, 20);
-    const ctaFontSize = Math.min(w / 24, 16);
 
     switch (template) {
-      case "center": {
-        // Dark gradient overlay
-        const grad = ctx.createLinearGradient(0, h * 0.4, 0, h);
-        grad.addColorStop(0, "rgba(0,0,0,0)");
-        grad.addColorStop(1, "rgba(0,0,0,0.75)");
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, w, h);
-
-        ctx.textAlign = "center";
+      case "editorial": {
+        // Top white band with serif headline, image below
+        const topBand = h * 0.28;
         ctx.fillStyle = "#ffffff";
-        ctx.font = `bold ${headlineFontSize}px sans-serif`;
-        wrapText(ctx, headline, w / 2, h * 0.6, w - 60, headlineFontSize * 1.2);
+        ctx.fillRect(0, 0, w, topBand);
 
+        // Draw image in remaining area
+        const imgArea = h - topBand;
+        const scale = Math.max(w / img.width, imgArea / img.height);
+        const iw = img.width * scale;
+        const ih = img.height * scale;
+        ctx.drawImage(img, (w - iw) / 2, topBand + (imgArea - ih) / 2, iw, ih);
+
+        // Subtle gradient at bottom for CTA
+        if (ctaText) {
+          const grad = ctx.createLinearGradient(0, h - 80, 0, h);
+          grad.addColorStop(0, "rgba(0,0,0,0)");
+          grad.addColorStop(1, "rgba(0,0,0,0.45)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, h - 80, w, 80);
+        }
+
+        // Headline in top band
+        const headSize = Math.min(w / 10, 48);
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#1a1a1a";
+        ctx.font = `bold ${headSize}px "Playfair Display", "Georgia", serif`;
+        wrapText(ctx, headline, 32, headSize + 16, w - 64, headSize * 1.15);
+
+        // Subheadline
         if (subheadline) {
-          ctx.font = `${subFontSize}px sans-serif`;
-          ctx.fillStyle = "rgba(255,255,255,0.85)";
-          ctx.fillText(subheadline, w / 2, h * 0.82, w - 60);
+          ctx.font = `${Math.min(w / 28, 16)}px "Source Sans 3", sans-serif`;
+          ctx.fillStyle = "#666";
+          ctx.fillText(subheadline, 32, topBand - 12, w - 64);
+        }
+
+        // CTA at bottom right
+        if (ctaText) {
+          ctx.textAlign = "right";
+          ctx.fillStyle = "#ffffff";
+          ctx.font = `600 ${Math.min(w / 30, 14)}px "Source Sans 3", sans-serif`;
+          ctx.fillText(ctaText.toUpperCase(), w - 28, h - 20);
         }
         break;
       }
-      case "top_cta": {
-        // Top bar
-        ctx.fillStyle = "rgba(0,0,0,0.8)";
-        ctx.fillRect(0, 0, w, headlineFontSize * 2.8);
+      case "banner": {
+        // Full bleed image with white banner across top
+        const scale = Math.max(w / img.width, h / img.height);
+        const iw = img.width * scale;
+        const ih = img.height * scale;
+        ctx.drawImage(img, (w - iw) / 2, (h - ih) / 2, iw, ih);
 
+        // White banner strip at top
+        const bannerH = h * 0.18;
+        ctx.fillStyle = "rgba(255,255,255,0.94)";
+        ctx.fillRect(0, 0, w, bannerH);
+
+        // Thin accent line
+        ctx.fillStyle = "#1a1a1a";
+        ctx.fillRect(0, bannerH, w, 2);
+
+        const headSize = Math.min(w / 13, 36);
         ctx.textAlign = "center";
-        ctx.fillStyle = "#ffffff";
-        ctx.font = `bold ${headlineFontSize * 0.9}px sans-serif`;
-        ctx.fillText(headline, w / 2, headlineFontSize * 1.8, w - 40);
+        ctx.fillStyle = "#1a1a1a";
+        ctx.font = `bold ${headSize}px "Playfair Display", "Georgia", serif`;
+        ctx.fillText(headline, w / 2, bannerH / 2 + headSize / 3, w - 48);
 
         // CTA strip at bottom
         if (ctaText) {
-          ctx.fillStyle = "#f5f5f5";
-          ctx.fillRect(0, h - 50, w, 50);
-          ctx.fillStyle = "#141414";
-          ctx.font = `bold ${ctaFontSize}px sans-serif`;
-          ctx.fillText(ctaText.toUpperCase(), w / 2, h - 20);
+          const ctaH = 44;
+          ctx.fillStyle = "rgba(255,255,255,0.94)";
+          ctx.fillRect(0, h - ctaH, w, ctaH);
+          ctx.fillStyle = "#1a1a1a";
+          ctx.fillRect(0, h - ctaH, w, 2);
+          ctx.font = `600 ${Math.min(w / 30, 13)}px "Source Sans 3", sans-serif`;
+          ctx.fillText(ctaText.toUpperCase(), w / 2, h - ctaH / 2 + 5);
         }
         break;
       }
-      case "side_panel": {
+      case "split": {
+        // Left: white panel with text. Right: image
+        const splitX = w * 0.42;
+
         // Left panel
-        const panelW = w * 0.42;
-        ctx.fillStyle = "rgba(0,0,0,0.85)";
-        ctx.fillRect(0, 0, panelW, h);
+        ctx.fillStyle = "#faf9f6";
+        ctx.fillRect(0, 0, splitX, h);
 
+        // Right image
+        const imgW = w - splitX;
+        const scale = Math.max(imgW / img.width, h / img.height);
+        const iw = img.width * scale;
+        const ih = img.height * scale;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(splitX, 0, imgW, h);
+        ctx.clip();
+        ctx.drawImage(img, splitX + (imgW - iw) / 2, (h - ih) / 2, iw, ih);
+        ctx.restore();
+
+        // Thin vertical divider
+        ctx.fillStyle = "#e0ddd8";
+        ctx.fillRect(splitX - 1, 0, 1, h);
+
+        // Headline on left
+        const headSize = Math.min(splitX / 5, 36);
         ctx.textAlign = "left";
-        ctx.fillStyle = "#ffffff";
-        ctx.font = `bold ${headlineFontSize * 0.85}px sans-serif`;
-        wrapText(ctx, headline, 24, h * 0.35, panelW - 48, headlineFontSize);
+        ctx.fillStyle = "#1a1a1a";
+        ctx.font = `bold ${headSize}px "Playfair Display", "Georgia", serif`;
+        wrapText(ctx, headline, 28, h * 0.25, splitX - 56, headSize * 1.2);
 
+        // Subheadline
         if (subheadline) {
-          ctx.font = `${subFontSize * 0.9}px sans-serif`;
-          ctx.fillStyle = "rgba(255,255,255,0.8)";
-          wrapText(ctx, subheadline, 24, h * 0.6, panelW - 48, subFontSize * 1.2);
+          ctx.font = `${Math.min(splitX / 12, 15)}px "Source Sans 3", sans-serif`;
+          ctx.fillStyle = "#777";
+          wrapText(ctx, subheadline, 28, h * 0.62, splitX - 56, 20);
         }
 
+        // CTA at bottom of left panel
         if (ctaText) {
-          ctx.fillStyle = "#ffffff";
-          ctx.font = `bold ${ctaFontSize}px sans-serif`;
-          ctx.fillText(ctaText.toUpperCase(), 24, h * 0.85);
-          ctx.strokeStyle = "#ffffff";
-          ctx.lineWidth = 1;
-          const textW = ctx.measureText(ctaText.toUpperCase()).width;
-          ctx.beginPath();
-          ctx.moveTo(24, h * 0.85 + 4);
-          ctx.lineTo(24 + textW, h * 0.85 + 4);
-          ctx.stroke();
+          ctx.fillStyle = "#1a1a1a";
+          ctx.font = `600 ${Math.min(splitX / 12, 13)}px "Source Sans 3", sans-serif`;
+          ctx.fillText(ctaText.toUpperCase(), 28, h - 32);
+          // Underline
+          const tw = ctx.measureText(ctaText.toUpperCase()).width;
+          ctx.fillRect(28, h - 28, tw, 1);
         }
         break;
       }
       case "quote": {
-        // Full dark overlay
-        ctx.fillStyle = "rgba(0,0,0,0.6)";
+        // Full bleed image with elegant white quote card overlay
+        const scale = Math.max(w / img.width, h / img.height);
+        const iw = img.width * scale;
+        const ih = img.height * scale;
+        ctx.drawImage(img, (w - iw) / 2, (h - ih) / 2, iw, ih);
+
+        // Soft light overlay
+        ctx.fillStyle = "rgba(255,255,255,0.15)";
         ctx.fillRect(0, 0, w, h);
 
-        // Quote marks
+        // White quote card in center
+        const cardW = w * 0.78;
+        const cardH = h * 0.42;
+        const cardX = (w - cardW) / 2;
+        const cardY = (h - cardH) / 2;
+        ctx.fillStyle = "rgba(255,255,255,0.95)";
+        ctx.beginPath();
+        ctx.roundRect(cardX, cardY, cardW, cardH, 4);
+        ctx.fill();
+
+        // Quote mark
+        const quoteSize = Math.min(w / 6, 72);
         ctx.textAlign = "center";
-        ctx.fillStyle = "rgba(255,255,255,0.3)";
-        ctx.font = `bold ${headlineFontSize * 3}px serif`;
-        ctx.fillText("\u201C", w / 2, h * 0.32);
+        ctx.fillStyle = "rgba(0,0,0,0.08)";
+        ctx.font = `bold ${quoteSize}px "Playfair Display", "Georgia", serif`;
+        ctx.fillText("\u201C", w / 2, cardY + quoteSize * 0.7);
 
-        // Headline as quote
-        ctx.fillStyle = "#ffffff";
-        ctx.font = `italic ${headlineFontSize * 0.95}px serif`;
-        wrapText(ctx, headline, w / 2, h * 0.48, w - 80, headlineFontSize * 1.15);
+        // Quote text
+        const headSize = Math.min(w / 16, 28);
+        ctx.fillStyle = "#1a1a1a";
+        ctx.font = `italic ${headSize}px "Playfair Display", "Georgia", serif`;
+        wrapText(ctx, headline, w / 2, cardY + cardH * 0.45, cardW - 56, headSize * 1.3);
 
-        // Attribution line
+        // Attribution
         if (subheadline) {
-          ctx.font = `${subFontSize * 0.85}px sans-serif`;
-          ctx.fillStyle = "rgba(255,255,255,0.7)";
-          ctx.fillText(`— ${subheadline}`, w / 2, h * 0.78, w - 60);
+          ctx.font = `${Math.min(w / 30, 13)}px "Source Sans 3", sans-serif`;
+          ctx.fillStyle = "#888";
+          ctx.fillText(`— ${subheadline}`, w / 2, cardY + cardH - 24, cardW - 56);
         }
         break;
       }
     }
+  };
+
+  const drawOverlay = (ctx: CanvasRenderingContext2D, w: number, h: number) => {
+    // For placeholder only — minimal text
+    if (!selectedHeadline) return;
+    const headSize = Math.min(w / 10, 48);
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#1a1a1a";
+    ctx.font = `bold ${headSize}px "Playfair Display", "Georgia", serif`;
+    wrapText(ctx, selectedHeadline, w / 2, h * 0.35, w - 60, headSize * 1.15);
   };
 
   const wrapText = (
