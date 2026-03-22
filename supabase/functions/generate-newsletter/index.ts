@@ -31,6 +31,8 @@ serve(async (req) => {
 
     const { data: brief } = await adminClient.from("content_briefs").select("*").eq("job_id", job_id).order("version", { ascending: false }).limit(1).single();
 
+    const { data: source } = await adminClient.from("content_sources").select("*").eq("job_id", job_id).order("created_at", { ascending: false }).limit(1).single();
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
@@ -44,8 +46,9 @@ Brief Summary: ${brief?.summary || "N/A"}
 Newsletter Angle: ${brief?.newsletter_angle || "N/A"}
 Key Insights: ${JSON.stringify(brief?.key_insights || [])}
 CTA: ${job.primary_cta_label || ""} - ${job.primary_cta_url || ""}
+Video URL: ${source?.video_url || "N/A"}
 
-Write a complete newsletter with: headline, hook, main body, expert highlight, product tie-in, CTA block, closing line.`;
+Write a complete newsletter with: headline, hook, main body, expert highlight, product tie-in, CTA block, closing line.${source?.video_url ? ` Include a reference to the video: ${source.video_url}` : ""}`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

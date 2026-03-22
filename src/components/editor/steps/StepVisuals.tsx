@@ -103,8 +103,13 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
       return;
     }
 
-    const { data: urlData } = supabase.storage.from("transcripts").getPublicUrl(path);
-    setImageUrl(urlData.publicUrl);
+    const { data: signedData, error: signedErr } = await supabase.storage.from("transcripts").createSignedUrl(path, 3600);
+    if (signedErr || !signedData?.signedUrl) {
+      toast({ title: "Failed to get image URL", variant: "destructive" });
+      setUploading(false);
+      return;
+    }
+    setImageUrl(signedData.signedUrl);
     setUploading(false);
     toast({ title: "Image uploaded" });
   };
