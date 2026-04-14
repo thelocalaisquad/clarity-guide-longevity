@@ -1,33 +1,38 @@
 
 
-## Plan: Auto-Publish on Approval
+## Plan: Publish Approved Articles to the Website
 
-When all review checklist items pass (brief, newsletter, article, social channels approved + CTA configured), automatically trigger publishing to all active webhook destinations without requiring the editor to manually go to the Publish step.
+You have 3 approved articles with content ready to go. The website displays content from the `editions` table, so I need to create edition records from the approved article outputs.
 
-### How It Works
+### What Gets Published
 
-1. **Add an "Auto-publish" toggle to Settings** — a new column `auto_publish` (boolean, default false) on `publishing_targets` or a new `editor_settings` table with a single row. Editors opt in explicitly.
+| # | Title | Guest | Slug |
+|---|-------|-------|------|
+| 1 | Innovating Light Therapy: Why Skin Contact is the Key to Optimal Dosing | John Graham Harper | innovating-light-therapy-skin-contact-optimal-dose |
+| 2 | Neuro Pro 2: Bridging the Gap Between Immediate Focus and Long-Term Brain Health | — | neuro-pro-2-cognitive-enhancement-science |
+| 3 | How Magnetic Fields Boost Cellular Energy: Recharging the Biological Battery | Scott Baider | how-magnetic-fields-boost-cellular-energy-pemf-induction |
 
-2. **Create a database trigger + edge function** — when a `content_outputs` or `content_briefs` row is updated with `approved = true`, a Postgres trigger calls `pg_net` to invoke a new `check-auto-publish` edge function. This function:
-   - Runs the same readiness checks as StepReview (brief approved, newsletter approved, article approved, all social approved, CTA configured)
-   - If all pass and auto-publish is enabled, triggers `trigger-publish-webhook` for each active publishing target
-   - Logs the auto-publish action in `activity_log`
+### Steps
 
-3. **Update StepReview UI** — show a banner when auto-publish is enabled: "Auto-publish is ON. Content will publish automatically when all checks pass." Add a quick toggle to enable/disable it.
+1. **Create a "publish-to-website" edge function** that takes a `job_id`, reads the approved article output and job metadata, and inserts a row into the `editions` table with:
+   - `title`, `slug`, `body_html` from the article output
+   - `meta_description` from the article output
+   - `expert_name` from the job's `guest_name`
+   - `product_name`, `product_cta_url` from the job
+   - `edition_number` auto-incremented
+   - `is_published = true`
+   - `canonical_url` set to production domain + slug
+   - Category inferred from content type
 
-4. **Update Settings page** — add an auto-publish on/off switch in EditorSettings.
+2. **Add a "Publish to Website" destination** in StepPublish that calls this new function directly instead of a webhook, creating the edition record in the database.
 
-### Files to Create/Modify
+3. **Run it for the 3 existing approved articles** by invoking the function for each job, creating 3 new editions visible on the site immediately.
 
-| File | Change |
-|------|--------|
-| DB migration | Add `auto_publish_enabled` boolean to a new `editor_settings` table (single-row config) |
-| `supabase/functions/check-auto-publish/index.ts` | New edge function that checks readiness and triggers publishing |
-| DB migration | Add trigger on `content_outputs` and `content_briefs` to call `check-auto-publish` via `pg_net` on approval |
-| `src/pages/EditorSettings.tsx` | Add auto-publish toggle switch |
-| `src/components/editor/steps/StepReview.tsx` | Show auto-publish status banner |
+4. **Update the publishing target flow** so "website" in the destination list uses this internal publish path rather than requiring an external webhook URL.
 
-### Why a Trigger-Based Approach
+### Technical Details
 
-Rather than polling or checking on every page load, a Postgres trigger fires only when an approval actually changes. This ensures publishing happens immediately and reliably, even if the editor closes their browser after approving the last item.
+- **New edge function**: `supabase/functions/publish-to-website/index.ts` — authenticated, reads `content_outputs` + `content_jobs`, upserts into `editions`, logs to `activity_log`
+- **StepPublish.tsx**: When destination is "website", call `publish-to-website` function instead of `trigger-publish-webhook`
+- **No migration needed** — the `editions` table already has all the required columns
 
