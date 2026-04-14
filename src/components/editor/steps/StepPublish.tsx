@@ -63,10 +63,22 @@ const StepPublish = ({ job, onRefresh }: Props) => {
     setPublishing(true);
 
     for (const dest of selected) {
-      const { error } = await supabase.functions.invoke("trigger-publish-webhook", {
-        body: { job_id: job.id, destination: dest },
-      });
-      if (error) toast({ title: `Error publishing to ${dest}`, description: error.message, variant: "destructive" });
+      if (dest === "website") {
+        // Use internal publish-to-website function
+        const { error } = await supabase.functions.invoke("publish-to-website", {
+          body: { job_id: job.id },
+        });
+        if (error) {
+          toast({ title: "Error publishing to website", description: error.message, variant: "destructive" });
+        } else {
+          toast({ title: "Published to website ✓" });
+        }
+      } else {
+        const { error } = await supabase.functions.invoke("trigger-publish-webhook", {
+          body: { job_id: job.id, destination: dest },
+        });
+        if (error) toast({ title: `Error publishing to ${dest}`, description: error.message, variant: "destructive" });
+      }
     }
 
     await supabase.from("content_jobs").update({ status: "publishing" }).eq("id", job.id);
