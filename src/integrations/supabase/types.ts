@@ -433,6 +433,27 @@ export type Database = {
         }
         Relationships: []
       }
+      editor_settings: {
+        Row: {
+          auto_publish_enabled: boolean
+          created_at: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          auto_publish_enabled?: boolean
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          auto_publish_enabled?: boolean
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       operator_page_technologies: {
         Row: {
           operator_page_id: string

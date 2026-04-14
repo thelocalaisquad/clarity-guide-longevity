@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle, Zap } from "lucide-react";
 
 interface Props { job: any; }
 
@@ -37,6 +37,14 @@ const StepReview = ({ job }: Props) => {
     },
   });
 
+  const { data: settings } = useQuery({
+    queryKey: ["editor-settings"],
+    queryFn: async () => {
+      const { data } = await supabase.from("editor_settings").select("auto_publish_enabled").limit(1).single();
+      return data;
+    },
+  });
+
   const allSocialApproved = socialOutputs && socialOutputs.length > 0 && socialOutputs.every((s) => s.approved);
 
   const checks = [
@@ -53,6 +61,15 @@ const StepReview = ({ job }: Props) => {
     <div className="space-y-6">
       <h2 className="text-lg font-medium">Readiness Checklist</h2>
 
+      {settings?.auto_publish_enabled && (
+        <div className="flex items-center gap-2 p-3 rounded-md border border-primary/30 bg-primary/5">
+          <Zap className="h-4 w-4 text-primary" />
+          <p className="text-sm text-primary font-medium">
+            Auto-publish is ON — content will publish automatically when all checks pass.
+          </p>
+        </div>
+      )}
+
       <div className="space-y-3">
         {checks.map((c, i) => (
           <div key={i} className="flex items-center gap-3 p-3 border rounded-md">
@@ -64,7 +81,9 @@ const StepReview = ({ job }: Props) => {
 
       <div className="p-4 rounded-md border bg-card">
         {allReady ? (
-          <p className="text-sm text-emerald-600 font-medium">✓ All checks passed. Ready to publish.</p>
+          <p className="text-sm text-emerald-600 font-medium">
+            ✓ All checks passed. {settings?.auto_publish_enabled ? "Auto-publishing to all active destinations." : "Ready to publish."}
+          </p>
         ) : (
           <p className="text-sm text-muted-foreground">Complete all checks before publishing.</p>
         )}
