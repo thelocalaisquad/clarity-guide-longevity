@@ -1,36 +1,33 @@
 
 
-## Plan: Fix Three Editorial Workflow Issues
+## Plan: Auto-Publish on Approval
 
-### Issue 1: Missing Social Platforms (Facebook, TikTok, Pinterest)
+When all review checklist items pass (brief, newsletter, article, social channels approved + CTA configured), automatically trigger publishing to all active webhook destinations without requiring the editor to manually go to the Publish step.
 
-**Current state:** The social step only has 6 channels: LinkedIn, X Thread, Instagram, Reddit, Quote Card, Clip Titles. Facebook, TikTok, and Pinterest are missing.
+### How It Works
 
-**Fix:**
-- Add `facebook`, `tiktok`, and `pinterest` to the `CHANNELS` array in `StepSocial.tsx`
-- Add the same channels to the `CHANNELS` array in `generate-social/index.ts` edge function
-- Redeploy the edge function
+1. **Add an "Auto-publish" toggle to Settings** — a new column `auto_publish` (boolean, default false) on `publishing_targets` or a new `editor_settings` table with a single row. Editors opt in explicitly.
 
-### Issue 2: Visuals Not Generating
+2. **Create a database trigger + edge function** — when a `content_outputs` or `content_briefs` row is updated with `approved = true`, a Postgres trigger calls `pg_net` to invoke a new `check-auto-publish` edge function. This function:
+   - Runs the same readiness checks as StepReview (brief approved, newsletter approved, article approved, all social approved, CTA configured)
+   - If all pass and auto-publish is enabled, triggers `trigger-publish-webhook` for each active publishing target
+   - Logs the auto-publish action in `activity_log`
 
-**Current state:** The `transcripts` storage bucket is **private** (not public). The visuals step uploads images to this bucket and then calls `getPublicUrl()` — but since the bucket is private, the returned URL won't actually serve the image. The canvas `img.onload` never fires, so no preview renders.
+3. **Update StepReview UI** — show a banner when auto-publish is enabled: "Auto-publish is ON. Content will publish automatically when all checks pass." Add a quick toggle to enable/disable it.
 
-**Fix:**
-- Switch image uploads in `StepVisuals.tsx` to use `createSignedUrl()` instead of `getPublicUrl()` so images load correctly from the private bucket
-- This will allow the canvas to render the preview properly
+4. **Update Settings page** — add an auto-publish on/off switch in EditorSettings.
 
-### Issue 3: Video Link Not Included in Newsletter
+### Files to Create/Modify
 
-**Current state:** The `generate-newsletter` edge function fetches `content_jobs` and `content_briefs` but never fetches `content_sources` (where the video URL is stored). The video URL is completely absent from the AI prompt.
+| File | Change |
+|------|--------|
+| DB migration | Add `auto_publish_enabled` boolean to a new `editor_settings` table (single-row config) |
+| `supabase/functions/check-auto-publish/index.ts` | New edge function that checks readiness and triggers publishing |
+| DB migration | Add trigger on `content_outputs` and `content_briefs` to call `check-auto-publish` via `pg_net` on approval |
+| `src/pages/EditorSettings.tsx` | Add auto-publish toggle switch |
+| `src/components/editor/steps/StepReview.tsx` | Show auto-publish status banner |
 
-**Fix:**
-- In `generate-newsletter/index.ts`, fetch the latest `content_sources` row for the job
-- Include the `video_url` in the AI prompt so the newsletter content references the video
-- Redeploy the edge function
+### Why a Trigger-Based Approach
 
-### Files to Modify
-1. `src/components/editor/steps/StepSocial.tsx` — add Facebook, TikTok, Pinterest channels
-2. `supabase/functions/generate-social/index.ts` — add matching channels
-3. `src/components/editor/steps/StepVisuals.tsx` — use signed URLs for image loading
-4. `supabase/functions/generate-newsletter/index.ts` — fetch and include video URL in prompt
+Rather than polling or checking on every page load, a Postgres trigger fires only when an approval actually changes. This ensures publishing happens immediately and reliably, even if the editor closes their browser after approving the last item.
 
