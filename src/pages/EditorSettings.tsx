@@ -14,6 +14,28 @@ const EditorSettings = () => {
   const qc = useQueryClient();
   const [newTarget, setNewTarget] = useState({ name: "", target_type: "webhook", webhook_url: "" });
 
+  // Auto-publish setting
+  const { data: settings } = useQuery({
+    queryKey: ["editor-settings"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("editor_settings").select("*").limit(1).single();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const autoPublishMutation = useMutation({
+    mutationFn: async (enabled: boolean) => {
+      if (!settings?.id) return;
+      const { error } = await supabase.from("editor_settings").update({ auto_publish_enabled: enabled }).eq("id", settings.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["editor-settings"] });
+      toast({ title: settings?.auto_publish_enabled ? "Auto-publish disabled" : "Auto-publish enabled" });
+    },
+  });
+
   const { data: targets, isLoading } = useQuery({
     queryKey: ["publishing-targets"],
     queryFn: async () => {
@@ -60,6 +82,22 @@ const EditorSettings = () => {
     <EditorLayout>
       <div className="max-w-2xl space-y-8">
         <h1 className="text-2xl font-semibold text-foreground">Settings</h1>
+
+        {/* Auto-publish toggle */}
+        <section className="space-y-3">
+          <h2 className="text-lg font-medium border-b pb-2">Auto-Publish</h2>
+          <div className="flex items-center justify-between p-4 border rounded-md bg-card">
+            <div>
+              <p className="text-sm font-medium">Publish automatically when all checks pass</p>
+              <p className="text-xs text-muted-foreground">Content will be sent to all active webhook destinations as soon as brief, newsletter, article, and social are approved.</p>
+            </div>
+            <Switch
+              checked={settings?.auto_publish_enabled ?? false}
+              onCheckedChange={(checked) => autoPublishMutation.mutate(checked)}
+              disabled={autoPublishMutation.isPending}
+            />
+          </div>
+        </section>
 
         <section className="space-y-4">
           <h2 className="text-lg font-medium border-b pb-2">Webhook Destinations</h2>
