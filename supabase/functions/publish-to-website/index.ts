@@ -69,6 +69,29 @@ serve(async (req) => {
       .limit(1)
       .single();
 
+    // Fetch approved visual asset for og_image
+    const { data: visualAsset } = await adminClient
+      .from("visual_assets")
+      .select("image_url")
+      .eq("job_id", job_id)
+      .eq("approved", true)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    let ogImageUrl: string | null = null;
+    if (visualAsset?.image_url) {
+      const url = visualAsset.image_url;
+      const signMatch = url.match(/\/object\/sign\/(.+?)(?:\?|$)/);
+      const pubMatch = url.match(/\/object\/public\/(.+?)(?:\?|$)/);
+      const path = signMatch?.[1] || pubMatch?.[1];
+      if (path) {
+        ogImageUrl = `${Deno.env.get("SUPABASE_URL")}/storage/v1/object/public/${path}`;
+      } else {
+        ogImageUrl = url;
+      }
+    }
+
     // Get next edition number
     const { data: editions } = await adminClient
       .from("editions")
