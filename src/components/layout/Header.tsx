@@ -5,9 +5,7 @@ import { cn } from "@/lib/utils";
 
 import ExpertDialog from "./ExpertDialog";
 
-const navItems = [
-  { label: "About", href: "/about" },
-];
+const navItems: { label: string; href: string }[] = [];
 
 const Header = () => {
   const location = useLocation();
