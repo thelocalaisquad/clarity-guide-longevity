@@ -5,9 +5,7 @@ import { cn } from "@/lib/utils";
 
 import ExpertDialog from "./ExpertDialog";
 
-const navItems = [
-  { label: "About", href: "/about" },
-];
+const navItems: { label: string; href: string }[] = [];
 
 const Header = () => {
   const location = useLocation();
@@ -52,12 +50,14 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            to="/products"
+          <a
+            href="https://shop.longevitychannel1.com/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center h-9 px-5 bg-foreground text-background text-[0.65rem] font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-foreground/90 transition-colors whitespace-nowrap"
           >
             Shop Now
-          </Link>
+          </a>
           <button
             onClick={() => setExpertOpen(true)}
             className="inline-flex items-center h-9 px-5 border border-foreground text-foreground text-[0.65rem] font-semibold uppercase tracking-[0.12em] rounded-sm hover:bg-foreground/10 transition-colors whitespace-nowrap"
@@ -94,13 +94,15 @@ const Header = () => {
               {item.label}
             </Link>
           ))}
-          <Link
-            to="/products"
+          <a
+            href="https://shop.longevitychannel1.com/"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => setMobileOpen(false)}
             className="block py-3 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-foreground transition-colors"
           >
             Shop Now
-          </Link>
+          </a>
           <button
             onClick={() => { setMobileOpen(false); setExpertOpen(true); }}
             className="block py-3 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-primary transition-colors"
