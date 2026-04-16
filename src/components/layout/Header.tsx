@@ -94,13 +94,15 @@ const Header = () => {
               {item.label}
             </Link>
           ))}
-          <Link
-            to="/products"
+          <a
+            href="https://shop.longevitychannel1.com/"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => setMobileOpen(false)}
             className="block py-3 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-foreground transition-colors"
           >
             Shop Now
-          </Link>
+          </a>
           <button
             onClick={() => { setMobileOpen(false); setExpertOpen(true); }}
             className="block py-3 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-primary transition-colors"
