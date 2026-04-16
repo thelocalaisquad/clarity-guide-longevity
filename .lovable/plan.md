@@ -1,25 +1,39 @@
 
 
-## Plan: Bulk-Approve and Publish All Articles to Website
+## Plan: Add Images to Published Editions
 
 ### Problem
-All 19 article outputs are `approved = false`. The `publish-to-website` function requires approved articles. Previous publish attempts went through the wrong code path.
+- All 22 editions have `og_image = null` — no images display on the homepage or edition pages.
+- The `visual_assets` table has approved images for many jobs, but they use **signed URLs that expire** after ~1 hour.
+- The `transcripts` storage bucket is **private**, so public URLs won't work until it's made public.
 
-### Solution
+### Solution (3 steps)
 
-1. **Bulk-approve all article outputs** — Run a database migration to set `approved = true` on all `content_outputs` where `output_group = 'article'` for jobs currently stuck at `publishing` status.
+**Step 1 — Make the storage bucket public**
 
-2. **Bulk-publish all to website** — Write a small script that calls the `publish-to-website` edge function for each of the 19 jobs, creating edition records in the `editions` table so they appear on the live site.
+Run a migration to set the `transcripts` bucket to `public = true`. The images in `visuals/` need to be accessible without signed tokens for use as og_image on public pages.
 
-3. **Update job statuses** — Set all successfully published jobs to `status = 'published'`.
+**Step 2 — Backfill og_image on existing editions**
 
-### What Gets Published
-19 articles including: Horses and Humans, Zero Gravity Comfort, PEMF Charging Cells, PEMF Pain & Inflammation, Sunlight vs Red Light, LumaFlex, and more.
+For each edition, find the matching `content_job` (by matching slug in `content_outputs`), then find the latest approved `visual_asset` for that job. Extract the file path from the signed URL and construct a permanent public URL. Update each edition's `og_image` accordingly.
+
+This will be done via SQL UPDATE joining editions → content_outputs → visual_assets, extracting the storage path and building public URLs.
+
+**Step 3 — Update publish-to-website to include images**
+
+Modify the `publish-to-website` edge function to also query `visual_assets` for the job's approved image and set `og_image` on the edition at publish time, so future publications automatically include images.
 
 ### Files Changed
-- **DB migration**: Bulk-approve article outputs for publishing-status jobs
-- **Script execution**: Invoke `publish-to-website` for each job via the edge function
 
-### Technical Note
-The edge function already handles slug generation, YouTube embed conversion, edition numbering, and activity logging. We just need to approve the articles and trigger it for each job.
+| File | Change |
+|------|--------|
+| DB migration | Set `transcripts` bucket to public |
+| DB data update | Backfill `og_image` on all editions from visual_assets |
+| `supabase/functions/publish-to-website/index.ts` | Add visual_assets query to set `og_image` |
+
+### What the User Sees After
+
+- Homepage shows thumbnail images for each edition card
+- Edition pages have og_image set for social sharing
+- Future publishes automatically include the image
 
