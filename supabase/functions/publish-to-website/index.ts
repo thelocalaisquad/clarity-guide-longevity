@@ -143,6 +143,7 @@ serve(async (req) => {
       author: "Clarity Guide",
       read_time: "5 min",
       video_embed_url: videoEmbedUrl,
+      og_image: ogImageUrl,
       updated_at: new Date().toISOString(),
     };
 
