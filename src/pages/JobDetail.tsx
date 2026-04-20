@@ -4,6 +4,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import EditorLayout from "@/components/editor/EditorLayout";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Globe } from "lucide-react";
 import StepIntake from "@/components/editor/steps/StepIntake";
 import StepBrief from "@/components/editor/steps/StepBrief";
 import StepNewsletter from "@/components/editor/steps/StepNewsletter";
@@ -13,7 +15,19 @@ import StepVisuals from "@/components/editor/steps/StepVisuals";
 import StepReview from "@/components/editor/steps/StepReview";
 import StepPublish from "@/components/editor/steps/StepPublish";
 import ActivityTimeline from "@/components/editor/ActivityTimeline";
+import { usePublishToLive } from "@/hooks/usePublishToLive";
 import { cn } from "@/lib/utils";
+
+const formatRelative = (iso: string) => {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "just now";
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
+};
 
 const STEPS = ["Intake", "Brief", "Newsletter", "Article", "Social", "Visuals", "Review", "Publish"] as const;
 
@@ -84,16 +98,19 @@ const JobDetail = () => {
     <EditorLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <h1 className="text-2xl font-semibold text-foreground">{job.title}</h1>
             <p className="text-sm text-muted-foreground mt-1">
               {job.content_type} · Created {new Date(job.created_at).toLocaleDateString()}
             </p>
           </div>
-          <Badge className={`${statusColors[job.status] || ""} capitalize`}>
-            {job.status.replace(/_/g, " ")}
-          </Badge>
+          <div className="flex items-center gap-3 flex-wrap">
+            <LiveSyncControls jobId={job.id} />
+            <Badge className={`${statusColors[job.status] || ""} capitalize`}>
+              {job.status.replace(/_/g, " ")}
+            </Badge>
+          </div>
         </div>
 
         {/* Step tabs */}
@@ -123,6 +140,23 @@ const JobDetail = () => {
         </div>
       </div>
     </EditorLayout>
+  );
+};
+
+const LiveSyncControls = ({ jobId }: { jobId: string }) => {
+  const { publish, publishing, lastSync } = usePublishToLive(jobId);
+  return (
+    <div className="flex items-center gap-2">
+      {lastSync?.created_at && (
+        <span className="text-xs text-muted-foreground">
+          Live synced {formatRelative(lastSync.created_at)}
+        </span>
+      )}
+      <Button size="sm" onClick={publish} disabled={publishing}>
+        <Globe className={cn("mr-2 h-3.5 w-3.5", publishing && "animate-spin")} />
+        {publishing ? "Updating…" : lastSync ? "Re-publish" : "Publish to live"}
+      </Button>
+    </div>
   );
 };
 

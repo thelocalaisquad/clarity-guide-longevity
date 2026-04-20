@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { usePublishToLive } from "@/hooks/usePublishToLive";
 import { cn } from "@/lib/utils";
 import {
   Upload,
@@ -17,6 +18,7 @@ import {
   Type,
   LayoutTemplate,
   Monitor,
+  Globe,
 } from "lucide-react";
 
 interface Props {
@@ -44,6 +46,21 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
   const { toast } = useToast();
   const qc = useQueryClient();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { publish, publishing } = usePublishToLive(job.id);
+
+  // Fetch the live edition to show "Currently Live" badge on visuals
+  const { data: liveEdition } = useQuery({
+    queryKey: ["live-edition-for-job", job.id],
+    queryFn: async () => {
+      const slug = (job.title || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      const { data } = await supabase
+        .from("editions")
+        .select("og_image, slug")
+        .eq("slug", slug)
+        .maybeSingle();
+      return data;
+    },
+  });
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -592,7 +609,7 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
       </section>
 
       {/* Actions */}
-      <div className="flex gap-3 pt-2 border-t">
+      <div className="flex flex-wrap gap-3 pt-2 border-t">
         <Button onClick={() => handleSave(false)} disabled={saving || !selectedHeadline}>
           <Save className="mr-2 h-4 w-4" /> Save Draft
         </Button>
@@ -601,45 +618,66 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
           onClick={() => handleSave(true)}
           disabled={saving || !selectedHeadline || !imageUrl}
         >
-          <CheckCircle className="mr-2 h-4 w-4" /> Approve & Save
+          <CheckCircle className="mr-2 h-4 w-4" /> Approve (saves as draft)
+        </Button>
+        <Button onClick={publish} disabled={publishing}>
+          <Globe className={cn("mr-2 h-4 w-4", publishing && "animate-spin")} />
+          {publishing ? "Updating…" : "Update Live Site"}
         </Button>
       </div>
+      <p className="text-xs text-muted-foreground -mt-2">
+        Approve saves a new draft. Click <strong>Update Live Site</strong> to push the latest approved visual to the public page.
+      </p>
 
       {/* Existing Assets */}
       {assets && assets.length > 0 && (
         <section className="space-y-3 pt-4 border-t">
           <h3 className="text-sm font-semibold text-foreground">Saved Visuals</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {assets.map((asset: any) => (
+            {assets.map((asset: any) => {
+              const isLive = !!liveEdition?.og_image && !!asset.image_url &&
+                liveEdition.og_image.split("?")[0].endsWith(asset.image_url.split("?")[0].split("/").pop() || "___nope___");
+              return (
               <div
                 key={asset.id}
-                className="border rounded-sm p-3 bg-card space-y-2"
+                className={cn(
+                  "border rounded-sm p-3 bg-card space-y-2",
+                  isLive && "border-foreground"
+                )}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-medium capitalize">
                     {asset.platform} · {asset.template_name}
                   </span>
-                  {asset.approved ? (
-                    <Badge variant="outline" className="text-[10px] font-medium">
-                      ✓ Approved
-                    </Badge>
-                  ) : (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-6 text-xs"
-                      onClick={() => handleApproveExisting(asset.id)}
-                    >
-                      Approve
-                    </Button>
-                  )}
+                  <div className="flex items-center gap-1">
+                    {isLive && (
+                      <Badge className="text-[10px] font-medium bg-foreground text-background">
+                        ● Live
+                      </Badge>
+                    )}
+                    {asset.approved ? (
+                      <Badge variant="outline" className="text-[10px] font-medium">
+                        ✓ Approved
+                      </Badge>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 text-xs"
+                        onClick={() => handleApproveExisting(asset.id)}
+                      >
+                        Approve
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 <p className="text-sm font-medium leading-snug">{asset.overlay_headline}</p>
                 {asset.overlay_subheadline && (
                   <p className="text-xs text-muted-foreground">{asset.overlay_subheadline}</p>
                 )}
               </div>
-            ))}
+            );
+            })}
           </div>
         </section>
       )}

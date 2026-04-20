@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAutosave } from "@/hooks/useAutosave";
-import { CheckCircle, RefreshCw, Save } from "lucide-react";
+import { usePublishToLive } from "@/hooks/usePublishToLive";
+import { CheckCircle, RefreshCw, Save, Globe } from "lucide-react";
 
 interface Props { job: any; onRefresh: () => void; }
 
@@ -16,6 +17,7 @@ const StepArticle = ({ job, onRefresh }: Props) => {
   const qc = useQueryClient();
   const [generating, setGenerating] = useState(false);
   const [autosaved, setAutosaved] = useState(false);
+  const { publish, publishing } = usePublishToLive(job.id);
 
   const { data: output } = useQuery({
     queryKey: ["content-output-article", job.id],
@@ -98,12 +100,26 @@ const StepArticle = ({ job, onRefresh }: Props) => {
       <div className="space-y-2"><Label>Meta Description</Label><Textarea value={form.meta_description} onChange={(e) => set("meta_description", e.target.value)} rows={2} /></div>
       <div className="space-y-2"><Label>Title</Label><Input value={form.title} onChange={(e) => set("title", e.target.value)} /></div>
       <div className="space-y-2"><Label>Article Body</Label><Textarea value={form.body} onChange={(e) => set("body", e.target.value)} rows={20} /></div>
-      <div className="flex gap-3 pt-4 border-t">
-        <Button onClick={handleApprove}>Approve</Button>
+      <div className="flex flex-wrap gap-3 pt-4 border-t">
+        <Button onClick={handleApprove}>Approve (saves as draft)</Button>
+        <Button
+          onClick={publish}
+          disabled={publishing || !output?.approved}
+          variant="default"
+          title={!output?.approved ? "Approve the article first" : "Push latest approved content to live site"}
+        >
+          <Globe className={`mr-2 h-4 w-4 ${publishing ? "animate-spin" : ""}`} />
+          {publishing ? "Updating…" : "Update Live Site"}
+        </Button>
         <Button variant="outline" onClick={handleGenerate} disabled={generating}>
           <RefreshCw className={`mr-2 h-4 w-4 ${generating ? "animate-spin" : ""}`} /> Regenerate
         </Button>
       </div>
+      {!output?.approved && (
+        <p className="text-xs text-muted-foreground">
+          Tip: Approve the article first, then click <strong>Update Live Site</strong> to push your edits to the public page.
+        </p>
+      )}
     </div>
   );
 };
