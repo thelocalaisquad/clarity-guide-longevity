@@ -1,39 +1,42 @@
 
 
-## Plan: Add Images to Published Editions
+## Plan: Fix "edits don't reach the live site" on the Visuals (and Article) step
 
-### Problem
-- All 22 editions have `og_image = null` — no images display on the homepage or edition pages.
-- The `visual_assets` table has approved images for many jobs, but they use **signed URLs that expire** after ~1 hour.
-- The `transcripts` storage bucket is **private**, so public URLs won't work until it's made public.
+### Root cause
 
-### Solution (3 steps)
+The Visuals step (and similarly Article) saves **new draft rows** in `visual_assets` / `content_outputs`, but the changes never reach the live `editions` row unless the editor runs the full **Step 8 → Publish** flow again. Two specific issues:
 
-**Step 1 — Make the storage bucket public**
+1. **Visuals step never re-syncs the live edition.** Saving or approving a new visual just inserts a row into `visual_assets`. The live `editions.og_image` is only updated when `publish-to-website` runs.
+2. **The Visuals step always INSERTs a new row** (even when the user is iterating). So you accumulate multiple "approved" assets, and which one wins depends on `created_at DESC` — confusing and fragile.
+3. **No clear feedback in the UI** that "Saved/Approved" ≠ "Live on site". Users assume Approve = published.
+4. **Article step has the same shape** — edits autosave to `content_outputs`, but the live `editions.body_html` only updates on republish.
 
-Run a migration to set the `transcripts` bucket to `public = true`. The images in `visuals/` need to be accessible without signed tokens for use as og_image on public pages.
+### Fix (3 parts)
 
-**Step 2 — Backfill og_image on existing editions**
+**Part 1 — One-click "Push to live site" on the Visuals step**
+Add a prominent "Update Live Site" button next to Approve. It calls the existing `publish-to-website` edge function for this job, which already re-reads the latest approved visual and article and upserts the edition. Show a toast with the live URL on success.
 
-For each edition, find the matching `content_job` (by matching slug in `content_outputs`), then find the latest approved `visual_asset` for that job. Extract the file path from the signed URL and construct a permanent public URL. Update each edition's `og_image` accordingly.
+**Part 2 — Same button on the Article step and the top of Job Detail**
+- Article step: "Update Live Site" button (only enabled when an approved article exists).
+- Job Detail header: a persistent "Re-publish" button + a small badge showing "Live image last synced: <timestamp>" pulled from the latest `published_to_website` activity_log entry. This makes the live state visible from any step.
 
-This will be done via SQL UPDATE joining editions → content_outputs → visual_assets, extracting the storage path and building public URLs.
+**Part 3 — UX clarity on Visuals**
+- Show a "Currently Live" badge on whichever saved visual matches the edition's current `og_image`.
+- Change "Approve & Save" copy to "Approve (saves as draft — click Update Live Site to push)".
+- After the user clicks Update Live Site, refresh the visuals list and live badge.
 
-**Step 3 — Update publish-to-website to include images**
-
-Modify the `publish-to-website` edge function to also query `visual_assets` for the job's approved image and set `og_image` on the edition at publish time, so future publications automatically include images.
-
-### Files Changed
+### Files changed
 
 | File | Change |
-|------|--------|
-| DB migration | Set `transcripts` bucket to public |
-| DB data update | Backfill `og_image` on all editions from visual_assets |
-| `supabase/functions/publish-to-website/index.ts` | Add visual_assets query to set `og_image` |
+|---|---|
+| `src/components/editor/steps/StepVisuals.tsx` | Add "Update Live Site" button; add "Currently Live" badge on saved visuals; clarify Approve copy; invoke `publish-to-website` |
+| `src/components/editor/steps/StepArticle.tsx` | Add "Update Live Site" button alongside Approve |
+| `src/pages/JobDetail.tsx` | Add header-level "Re-publish" button + "Live last synced" timestamp badge |
+| (no DB migration, no edge function changes — `publish-to-website` already does the right thing) |
 
-### What the User Sees After
+### What the user will experience after
 
-- Homepage shows thumbnail images for each edition card
-- Edition pages have og_image set for social sharing
-- Future publishes automatically include the image
+- On Visuals: approve a new image → click **Update Live Site** → toast "Live site updated" → homepage and edition page show the new image immediately.
+- Same flow for article text edits.
+- A visible "Live last synced" timestamp at the top of every job, so it's obvious whether your latest edits are reflected on the public site.
 
