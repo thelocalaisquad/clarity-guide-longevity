@@ -143,4 +143,21 @@ const JobDetail = () => {
   );
 };
 
+const LiveSyncControls = ({ jobId }: { jobId: string }) => {
+  const { publish, publishing, lastSync } = usePublishToLive(jobId);
+  return (
+    <div className="flex items-center gap-2">
+      {lastSync?.created_at && (
+        <span className="text-xs text-muted-foreground">
+          Live synced {formatRelative(lastSync.created_at)}
+        </span>
+      )}
+      <Button size="sm" onClick={publish} disabled={publishing}>
+        <Globe className={cn("mr-2 h-3.5 w-3.5", publishing && "animate-spin")} />
+        {publishing ? "Updating…" : lastSync ? "Re-publish" : "Publish to live"}
+      </Button>
+    </div>
+  );
+};
+
 export default JobDetail;
