@@ -46,6 +46,21 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
   const { toast } = useToast();
   const qc = useQueryClient();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { publish, publishing } = usePublishToLive(job.id);
+
+  // Fetch the live edition to show "Currently Live" badge on visuals
+  const { data: liveEdition } = useQuery({
+    queryKey: ["live-edition-for-job", job.id],
+    queryFn: async () => {
+      const slug = (job.title || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      const { data } = await supabase
+        .from("editions")
+        .select("og_image, slug")
+        .eq("slug", slug)
+        .maybeSingle();
+      return data;
+    },
+  });
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -661,7 +676,8 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
                   <p className="text-xs text-muted-foreground">{asset.overlay_subheadline}</p>
                 )}
               </div>
-            ))}
+            );
+            })}
           </div>
         </section>
       )}
