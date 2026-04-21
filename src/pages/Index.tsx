@@ -33,19 +33,52 @@ const websiteJsonLd = {
     "Advanced longevity technology and wellness devices for home use and business operators.",
 };
 
+const withCacheBust = (url: string | null | undefined, stamp?: string) => {
+  if (!url) return "";
+  if (url.includes("?v=") || url.includes("&v=")) return url;
+  const v = stamp ? new Date(stamp).getTime() : Date.now();
+  return `${url}${url.includes("?") ? "&" : "?"}v=${v}`;
+};
+
 const Index = () => {
   const { data: editions, isLoading } = useQuery({
     queryKey: ["editions-feed"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("editions")
-        .select("id, title, slug, category, published_date, author, read_time, meta_description, lead_summary_plain, og_image, edition_number")
+        .select("id, title, slug, category, published_date, author, read_time, meta_description, lead_summary_plain, og_image, edition_number, source_job_id, updated_at")
         .eq("is_published", true)
         .order("published_date", { ascending: false });
       if (error) throw error;
       return data;
     },
   });
+
+  const jobIds = (editions ?? []).map((e) => e.source_job_id).filter(Boolean) as string[];
+
+  const { data: visualsByJob } = useQuery({
+    queryKey: ["editions-feed-visuals", jobIds.sort().join(",")],
+    queryFn: async () => {
+      if (jobIds.length === 0) return {} as Record<string, { image_url: string | null; updated_at: string }>;
+      const { data } = await supabase
+        .from("visual_assets")
+        .select("job_id, image_url, updated_at")
+        .in("job_id", jobIds)
+        .eq("approved", true)
+        .order("updated_at", { ascending: false });
+      const map: Record<string, { image_url: string | null; updated_at: string }> = {};
+      (data ?? []).forEach((v) => {
+        if (v.job_id && !map[v.job_id]) map[v.job_id] = { image_url: v.image_url, updated_at: v.updated_at };
+      });
+      return map;
+    },
+    enabled: jobIds.length > 0,
+  });
+
+  const resolveHero = (e: { source_job_id: string | null; og_image: string | null; updated_at: string }) => {
+    const v = e.source_job_id ? visualsByJob?.[e.source_job_id] : undefined;
+    return withCacheBust(v?.image_url || e.og_image, v?.updated_at || e.updated_at);
+  };
 
   const latest = editions?.[0];
   const older = editions?.slice(1) ?? [];
@@ -83,20 +116,23 @@ const Index = () => {
           </h2>
           <Link to={`/editions/${latest.slug}`} className="group block">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              {latest.og_image && latest.og_image !== "/placeholder.svg" ? (
-                <div className="aspect-video overflow-hidden rounded-sm bg-muted">
-                  <img
-                    src={latest.og_image}
-                    alt={`${latest.title} — ${latest.category} edition`}
-                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                    loading="lazy"
-                  />
-                </div>
-              ) : (
-                <div className="aspect-video rounded-sm bg-muted flex items-center justify-center">
-                  <span className="text-muted-foreground text-sm">Edition #{latest.edition_number}</span>
-                </div>
-              )}
+              {(() => {
+                const heroSrc = resolveHero(latest);
+                return heroSrc && heroSrc !== "/placeholder.svg" ? (
+                  <div className="aspect-video overflow-hidden rounded-sm bg-muted">
+                    <img
+                      src={heroSrc}
+                      alt={`${latest.title} — ${latest.category} edition`}
+                      className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : (
+                  <div className="aspect-video rounded-sm bg-muted flex items-center justify-center">
+                    <span className="text-muted-foreground text-sm">Edition #{latest.edition_number}</span>
+                  </div>
+                );
+              })()}
 
               <div className="space-y-4">
                 <div className="flex items-center gap-3 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
@@ -145,20 +181,23 @@ const Index = () => {
                 to={`/editions/${edition.slug}`}
                 className="group block space-y-3"
               >
-                {edition.og_image && edition.og_image !== "/placeholder.svg" ? (
-                  <div className="aspect-video overflow-hidden rounded-sm bg-muted">
-                    <img
-                      src={edition.og_image}
-                      alt={`${edition.title} — ${edition.category} newsletter`}
-                      className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                      loading="lazy"
-                    />
-                  </div>
-                ) : (
-                  <div className="aspect-video rounded-sm bg-muted flex items-center justify-center">
-                    <span className="text-muted-foreground text-xs">#{edition.edition_number}</span>
-                  </div>
-                )}
+                {(() => {
+                  const heroSrc = resolveHero(edition);
+                  return heroSrc && heroSrc !== "/placeholder.svg" ? (
+                    <div className="aspect-video overflow-hidden rounded-sm bg-muted">
+                      <img
+                        src={heroSrc}
+                        alt={`${edition.title} — ${edition.category} newsletter`}
+                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    </div>
+                  ) : (
+                    <div className="aspect-video rounded-sm bg-muted flex items-center justify-center">
+                      <span className="text-muted-foreground text-xs">#{edition.edition_number}</span>
+                    </div>
+                  );
+                })()}
 
                 <div className="flex items-center gap-2 text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                   <span>{edition.category}</span>
