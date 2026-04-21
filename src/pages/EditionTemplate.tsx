@@ -136,6 +136,18 @@ const EditionTemplate = () => {
 
         <EditionByline author={edition.author} date={dateFormatted} dateIso={dateIso} readTime={edition.read_time} />
 
+        {edition.og_image && (
+          <figure className="editorial-narrow pb-8">
+            <img
+              src={edition.og_image}
+              alt={edition.title}
+              className="w-full h-auto rounded-sm"
+              loading="eager"
+              itemProp="image"
+            />
+          </figure>
+        )}
+
         {edition.video_embed_url && (
           <EditionVideo embedUrl={edition.video_embed_url} caption={edition.video_caption || ""} />
         )}
