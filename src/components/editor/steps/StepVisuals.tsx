@@ -427,23 +427,52 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
     const { error } = await (supabase as any).from("visual_assets").insert(payload);
     if (error) {
       toast({ title: "Save failed", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: approve ? "Visual approved & saved" : "Draft saved" });
-      await supabase.from("activity_log").insert({
-        job_id: job.id,
-        action_type: approve ? "visual_approved" : "visual_draft_saved",
-        details: `${platform} - ${template} template`,
-      });
-      qc.invalidateQueries({ queryKey: ["visual-assets", job.id] });
-      onRefresh();
+      setSaving(false);
+      return;
     }
+
+    toast({ title: approve ? "Visual approved & saved" : "Draft saved" });
+    await supabase.from("activity_log").insert({
+      job_id: job.id,
+      action_type: approve ? "visual_approved" : "visual_draft_saved",
+      details: `${platform} - ${template} template`,
+    });
+    qc.invalidateQueries({ queryKey: ["visual-assets", job.id] });
+    onRefresh();
     setSaving(false);
+
+    // Auto-push to live site immediately on Approve
+    if (approve) {
+      await publish();
+    }
   };
 
   const handleApproveExisting = async (assetId: string) => {
     await (supabase as any).from("visual_assets").update({ approved: true }).eq("id", assetId);
     toast({ title: "Visual approved" });
     qc.invalidateQueries({ queryKey: ["visual-assets", job.id] });
+  };
+
+  // Make a specific asset the unambiguous live winner, then publish
+  const handlePushToLive = async (assetId: string) => {
+    // Demote all other approved visuals for this job
+    await (supabase as any)
+      .from("visual_assets")
+      .update({ approved: false })
+      .eq("job_id", job.id)
+      .neq("id", assetId);
+    // Promote this one
+    await (supabase as any)
+      .from("visual_assets")
+      .update({ approved: true })
+      .eq("id", assetId);
+    // Bump created_at so latest-approved tiebreakers prefer it too
+    await (supabase as any)
+      .from("visual_assets")
+      .update({ updated_at: new Date().toISOString() })
+      .eq("id", assetId);
+    qc.invalidateQueries({ queryKey: ["visual-assets", job.id] });
+    await publish();
   };
 
   return (
