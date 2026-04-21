@@ -116,20 +116,23 @@ const Index = () => {
           </h2>
           <Link to={`/editions/${latest.slug}`} className="group block">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              {latest.og_image && latest.og_image !== "/placeholder.svg" ? (
-                <div className="aspect-video overflow-hidden rounded-sm bg-muted">
-                  <img
-                    src={latest.og_image}
-                    alt={`${latest.title} — ${latest.category} edition`}
-                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                    loading="lazy"
-                  />
-                </div>
-              ) : (
-                <div className="aspect-video rounded-sm bg-muted flex items-center justify-center">
-                  <span className="text-muted-foreground text-sm">Edition #{latest.edition_number}</span>
-                </div>
-              )}
+              {(() => {
+                const heroSrc = resolveHero(latest);
+                return heroSrc && heroSrc !== "/placeholder.svg" ? (
+                  <div className="aspect-video overflow-hidden rounded-sm bg-muted">
+                    <img
+                      src={heroSrc}
+                      alt={`${latest.title} — ${latest.category} edition`}
+                      className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : (
+                  <div className="aspect-video rounded-sm bg-muted flex items-center justify-center">
+                    <span className="text-muted-foreground text-sm">Edition #{latest.edition_number}</span>
+                  </div>
+                );
+              })()}
 
               <div className="space-y-4">
                 <div className="flex items-center gap-3 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
@@ -178,20 +181,23 @@ const Index = () => {
                 to={`/editions/${edition.slug}`}
                 className="group block space-y-3"
               >
-                {edition.og_image && edition.og_image !== "/placeholder.svg" ? (
-                  <div className="aspect-video overflow-hidden rounded-sm bg-muted">
-                    <img
-                      src={edition.og_image}
-                      alt={`${edition.title} — ${edition.category} newsletter`}
-                      className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                      loading="lazy"
-                    />
-                  </div>
-                ) : (
-                  <div className="aspect-video rounded-sm bg-muted flex items-center justify-center">
-                    <span className="text-muted-foreground text-xs">#{edition.edition_number}</span>
-                  </div>
-                )}
+                {(() => {
+                  const heroSrc = resolveHero(edition);
+                  return heroSrc && heroSrc !== "/placeholder.svg" ? (
+                    <div className="aspect-video overflow-hidden rounded-sm bg-muted">
+                      <img
+                        src={heroSrc}
+                        alt={`${edition.title} — ${edition.category} newsletter`}
+                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    </div>
+                  ) : (
+                    <div className="aspect-video rounded-sm bg-muted flex items-center justify-center">
+                      <span className="text-muted-foreground text-xs">#{edition.edition_number}</span>
+                    </div>
+                  );
+                })()}
 
                 <div className="flex items-center gap-2 text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                   <span>{edition.category}</span>
