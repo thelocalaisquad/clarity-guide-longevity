@@ -16,6 +16,7 @@ import EditionSubscribe from "@/components/edition/EditionSubscribe";
 import EditionJsonLd from "@/components/edition/EditionJsonLd";
 import EditionSocialGenerator from "@/components/edition/EditionSocialGenerator";
 import NotFound from "./NotFound";
+import { withImageCacheBust } from "@/lib/images";
 
 const formatDate = (dateStr: string) => {
   const d = new Date(dateStr + "T00:00:00");
@@ -58,13 +59,6 @@ const EditionTemplate = () => {
     enabled: Boolean(edition?.source_job_id),
   });
 
-  const withCacheBust = (url: string | null | undefined, stamp?: string) => {
-    if (!url) return url ?? "";
-    if (url.includes("?v=") || url.includes("&v=")) return url;
-    const v = stamp ? new Date(stamp).getTime() : Date.now();
-    return `${url}${url.includes("?") ? "&" : "?"}v=${v}`;
-  };
-
   if (isLoading) {
     return (
       <Layout>
@@ -81,7 +75,7 @@ const EditionTemplate = () => {
   const dateFormatted = formatDate(edition.published_date);
   const dateIso = edition.published_date;
   const canonicalUrl = edition.canonical_url || `https://clarity-guide-longevity.lovable.app/editions/${edition.slug}`;
-  const heroImage = withCacheBust(
+  const heroImage = withImageCacheBust(
     latestVisual?.image_url || edition.og_image,
     latestVisual?.updated_at || edition.updated_at
   );

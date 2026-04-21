@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/layout/Layout";
 import EditionSubscribe from "@/components/edition/EditionSubscribe";
 import HeroIntro from "@/components/home/HeroIntro";
+import { withImageCacheBust } from "@/lib/images";
 
 const SITE_URL = "https://clarity-guide-longevity.lovable.app";
 
@@ -31,13 +32,6 @@ const websiteJsonLd = {
   url: SITE_URL,
   description:
     "Advanced longevity technology and wellness devices for home use and business operators.",
-};
-
-const withCacheBust = (url: string | null | undefined, stamp?: string) => {
-  if (!url) return "";
-  if (url.includes("?v=") || url.includes("&v=")) return url;
-  const v = stamp ? new Date(stamp).getTime() : Date.now();
-  return `${url}${url.includes("?") ? "&" : "?"}v=${v}`;
 };
 
 const Index = () => {
@@ -77,7 +71,7 @@ const Index = () => {
 
   const resolveHero = (e: { source_job_id: string | null; og_image: string | null; updated_at: string }) => {
     const v = e.source_job_id ? visualsByJob?.[e.source_job_id] : undefined;
-    return withCacheBust(v?.image_url || e.og_image, v?.updated_at || e.updated_at);
+    return withImageCacheBust(v?.image_url || e.og_image, v?.updated_at || e.updated_at);
   };
 
   const latest = editions?.[0];
