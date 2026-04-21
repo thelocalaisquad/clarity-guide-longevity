@@ -1,0 +1,1 @@
+UPDATE public.editions SET og_image = 'https://pjriaxqmyzvgtwaspsqv.supabase.co/storage/v1/object/public/transcripts/visuals/b93484ab-d908-4a9f-84b6-b58294ef5575/pemf-pulse-hero.jpeg?v=' || extract(epoch from now())::bigint, updated_at = now() WHERE slug = 'pemf-therapy-safe-effective-for-all-ages';
