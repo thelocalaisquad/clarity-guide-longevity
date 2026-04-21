@@ -40,6 +40,31 @@ const EditionTemplate = () => {
     enabled: Boolean(slug),
   });
 
+  // Pull latest approved visual for this edition's source job, so hero image
+  // updates the moment an editor approves a new visual — no publish required.
+  const { data: latestVisual } = useQuery({
+    queryKey: ["edition-latest-visual", edition?.source_job_id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("visual_assets")
+        .select("image_url, updated_at")
+        .eq("job_id", edition!.source_job_id!)
+        .eq("approved", true)
+        .order("updated_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return data;
+    },
+    enabled: Boolean(edition?.source_job_id),
+  });
+
+  const withCacheBust = (url: string | null | undefined, stamp?: string) => {
+    if (!url) return url ?? "";
+    if (url.includes("?v=") || url.includes("&v=")) return url;
+    const v = stamp ? new Date(stamp).getTime() : Date.now();
+    return `${url}${url.includes("?") ? "&" : "?"}v=${v}`;
+  };
+
   if (isLoading) {
     return (
       <Layout>

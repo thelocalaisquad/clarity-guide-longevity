@@ -146,6 +146,7 @@ serve(async (req) => {
       read_time: "5 min",
       video_embed_url: videoEmbedUrl,
       og_image: ogImageUrl,
+      source_job_id: job_id,
       updated_at: new Date().toISOString(),
     };
 
