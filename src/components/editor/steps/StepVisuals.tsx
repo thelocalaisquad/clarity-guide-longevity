@@ -704,6 +704,18 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
                 {asset.overlay_subheadline && (
                   <p className="text-xs text-muted-foreground">{asset.overlay_subheadline}</p>
                 )}
+                {asset.image_url && !isLive && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs w-full mt-1"
+                    disabled={publishing}
+                    onClick={() => handlePushToLive(asset.id)}
+                  >
+                    <Globe className={cn("mr-2 h-3 w-3", publishing && "animate-spin")} />
+                    Push this to live
+                  </Button>
+                )}
               </div>
             );
             })}
