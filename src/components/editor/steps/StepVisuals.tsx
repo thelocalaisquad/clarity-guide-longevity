@@ -643,19 +643,19 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
           <Save className="mr-2 h-4 w-4" /> Save Draft
         </Button>
         <Button
-          variant="outline"
+          variant="default"
           onClick={() => handleSave(true)}
-          disabled={saving || !selectedHeadline || !imageUrl}
+          disabled={saving || publishing || !selectedHeadline || !imageUrl}
         >
-          <CheckCircle className="mr-2 h-4 w-4" /> Approve (saves as draft)
+          <CheckCircle className="mr-2 h-4 w-4" /> Approve & Push Live
         </Button>
-        <Button onClick={publish} disabled={publishing}>
+        <Button variant="outline" onClick={publish} disabled={publishing}>
           <Globe className={cn("mr-2 h-4 w-4", publishing && "animate-spin")} />
-          {publishing ? "Updating…" : "Update Live Site"}
+          {publishing ? "Updating…" : "Re-sync Live Site"}
         </Button>
       </div>
       <p className="text-xs text-muted-foreground -mt-2">
-        Approve saves a new draft. Click <strong>Update Live Site</strong> to push the latest approved visual to the public page.
+        <strong>Approve & Push Live</strong> saves the new visual and immediately updates the public page. Use <strong>Re-sync</strong> to re-push without changes.
       </p>
 
       {/* Existing Assets */}
