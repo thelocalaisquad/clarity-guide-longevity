@@ -46,6 +46,10 @@ export function usePublishToLive(jobId: string) {
       qc.invalidateQueries({ queryKey: ["last-live-sync", jobId] });
       qc.invalidateQueries({ queryKey: ["activity-log", jobId] });
       qc.invalidateQueries({ queryKey: ["visual-assets", jobId] });
+      qc.invalidateQueries({ queryKey: ["live-edition-for-job", jobId] });
+      // Public site queries
+      qc.invalidateQueries({ queryKey: ["editions-feed"] });
+      if (slug) qc.invalidateQueries({ queryKey: ["edition", slug] });
     } catch (e: any) {
       toast({
         title: "Failed to update live site",

@@ -427,23 +427,52 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
     const { error } = await (supabase as any).from("visual_assets").insert(payload);
     if (error) {
       toast({ title: "Save failed", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: approve ? "Visual approved & saved" : "Draft saved" });
-      await supabase.from("activity_log").insert({
-        job_id: job.id,
-        action_type: approve ? "visual_approved" : "visual_draft_saved",
-        details: `${platform} - ${template} template`,
-      });
-      qc.invalidateQueries({ queryKey: ["visual-assets", job.id] });
-      onRefresh();
+      setSaving(false);
+      return;
     }
+
+    toast({ title: approve ? "Visual approved & saved" : "Draft saved" });
+    await supabase.from("activity_log").insert({
+      job_id: job.id,
+      action_type: approve ? "visual_approved" : "visual_draft_saved",
+      details: `${platform} - ${template} template`,
+    });
+    qc.invalidateQueries({ queryKey: ["visual-assets", job.id] });
+    onRefresh();
     setSaving(false);
+
+    // Auto-push to live site immediately on Approve
+    if (approve) {
+      await publish();
+    }
   };
 
   const handleApproveExisting = async (assetId: string) => {
     await (supabase as any).from("visual_assets").update({ approved: true }).eq("id", assetId);
     toast({ title: "Visual approved" });
     qc.invalidateQueries({ queryKey: ["visual-assets", job.id] });
+  };
+
+  // Make a specific asset the unambiguous live winner, then publish
+  const handlePushToLive = async (assetId: string) => {
+    // Demote all other approved visuals for this job
+    await (supabase as any)
+      .from("visual_assets")
+      .update({ approved: false })
+      .eq("job_id", job.id)
+      .neq("id", assetId);
+    // Promote this one
+    await (supabase as any)
+      .from("visual_assets")
+      .update({ approved: true })
+      .eq("id", assetId);
+    // Bump created_at so latest-approved tiebreakers prefer it too
+    await (supabase as any)
+      .from("visual_assets")
+      .update({ updated_at: new Date().toISOString() })
+      .eq("id", assetId);
+    qc.invalidateQueries({ queryKey: ["visual-assets", job.id] });
+    await publish();
   };
 
   return (
@@ -614,19 +643,19 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
           <Save className="mr-2 h-4 w-4" /> Save Draft
         </Button>
         <Button
-          variant="outline"
+          variant="default"
           onClick={() => handleSave(true)}
-          disabled={saving || !selectedHeadline || !imageUrl}
+          disabled={saving || publishing || !selectedHeadline || !imageUrl}
         >
-          <CheckCircle className="mr-2 h-4 w-4" /> Approve (saves as draft)
+          <CheckCircle className="mr-2 h-4 w-4" /> Approve & Push Live
         </Button>
-        <Button onClick={publish} disabled={publishing}>
+        <Button variant="outline" onClick={publish} disabled={publishing}>
           <Globe className={cn("mr-2 h-4 w-4", publishing && "animate-spin")} />
-          {publishing ? "Updating…" : "Update Live Site"}
+          {publishing ? "Updating…" : "Re-sync Live Site"}
         </Button>
       </div>
       <p className="text-xs text-muted-foreground -mt-2">
-        Approve saves a new draft. Click <strong>Update Live Site</strong> to push the latest approved visual to the public page.
+        <strong>Approve & Push Live</strong> saves the new visual and immediately updates the public page. Use <strong>Re-sync</strong> to re-push without changes.
       </p>
 
       {/* Existing Assets */}
@@ -674,6 +703,18 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
                 <p className="text-sm font-medium leading-snug">{asset.overlay_headline}</p>
                 {asset.overlay_subheadline && (
                   <p className="text-xs text-muted-foreground">{asset.overlay_subheadline}</p>
+                )}
+                {asset.image_url && !isLive && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs w-full mt-1"
+                    disabled={publishing}
+                    onClick={() => handlePushToLive(asset.id)}
+                  >
+                    <Globe className={cn("mr-2 h-3 w-3", publishing && "animate-spin")} />
+                    Push this to live
+                  </Button>
                 )}
               </div>
             );
