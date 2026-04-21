@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,7 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
   const qc = useQueryClient();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { publish, publishing } = usePublishToLive(job.id);
+  const [searchParams] = useSearchParams();
 
   // Fetch the live edition to show "Currently Live" badge on visuals
   const { data: liveEdition } = useQuery({
