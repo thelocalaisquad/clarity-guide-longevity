@@ -81,7 +81,11 @@ const EditionTemplate = () => {
   const dateFormatted = formatDate(edition.published_date);
   const dateIso = edition.published_date;
   const canonicalUrl = edition.canonical_url || `https://clarity-guide-longevity.lovable.app/editions/${edition.slug}`;
-  const ogImage = edition.og_image || "/placeholder.svg";
+  const heroImage = withCacheBust(
+    latestVisual?.image_url || edition.og_image,
+    latestVisual?.updated_at || edition.updated_at
+  );
+  const ogImage = heroImage || "/placeholder.svg";
 
   const priceMatch = edition.product_price_range?.match(/[\d,]+/g);
   const priceLow = priceMatch?.[0]?.replace(/,/g, "") || "";
