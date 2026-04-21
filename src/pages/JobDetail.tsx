@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import EditorLayout from "@/components/editor/EditorLayout";
@@ -14,6 +14,7 @@ import StepSocial from "@/components/editor/steps/StepSocial";
 import StepVisuals from "@/components/editor/steps/StepVisuals";
 import StepReview from "@/components/editor/steps/StepReview";
 import StepPublish from "@/components/editor/steps/StepPublish";
+import StepAssets from "@/components/editor/steps/StepAssets";
 import ActivityTimeline from "@/components/editor/ActivityTimeline";
 import { usePublishToLive } from "@/hooks/usePublishToLive";
 import { cn } from "@/lib/utils";
@@ -29,7 +30,12 @@ const formatRelative = (iso: string) => {
   return `${d}d ago`;
 };
 
-const STEPS = ["Intake", "Brief", "Newsletter", "Article", "Social", "Visuals", "Review", "Publish"] as const;
+const STEPS = ["Intake", "Brief", "Newsletter", "Article", "Social", "Visuals", "Review", "Publish", "Assets"] as const;
+
+const STEP_SLUGS: Record<string, number> = {
+  intake: 0, brief: 1, newsletter: 2, article: 3,
+  social: 4, visuals: 5, review: 6, publish: 7, assets: 8,
+};
 
 const statusColors: Record<string, string> = {
   new: "bg-blue-100 text-blue-800",
@@ -45,8 +51,21 @@ const statusColors: Record<string, string> = {
 
 const JobDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
   const [activeStep, setActiveStep] = useState(0);
   const qc = useQueryClient();
+
+  // Deep-link support: ?step=visuals or ?step=5
+  useEffect(() => {
+    const stepParam = searchParams.get("step");
+    if (!stepParam) return;
+    const asNum = Number(stepParam);
+    if (!Number.isNaN(asNum) && asNum >= 0 && asNum < STEPS.length) {
+      setActiveStep(asNum);
+    } else if (STEP_SLUGS[stepParam.toLowerCase()] !== undefined) {
+      setActiveStep(STEP_SLUGS[stepParam.toLowerCase()]);
+    }
+  }, [searchParams]);
 
   const { data: job, isLoading } = useQuery({
     queryKey: ["content-job", id],
@@ -90,6 +109,7 @@ const JobDetail = () => {
       case 5: return <StepVisuals job={job} onRefresh={refresh} />;
       case 6: return <StepReview job={job} />;
       case 7: return <StepPublish job={job} onRefresh={refresh} />;
+      case 8: return <StepAssets job={job} onRefresh={refresh} />;
       default: return null;
     }
   };

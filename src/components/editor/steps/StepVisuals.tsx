@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,7 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
   const qc = useQueryClient();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { publish, publishing } = usePublishToLive(job.id);
+  const [searchParams] = useSearchParams();
 
   // Fetch the live edition to show "Currently Live" badge on visuals
   const { data: liveEdition } = useQuery({
@@ -100,6 +102,21 @@ const StepVisuals = ({ job, onRefresh }: Props) => {
       return data || [];
     },
   });
+
+  // Deep-link preselect: if ?assetId=... in URL, hydrate editor with that asset's values
+  const assetIdParam = searchParams.get("assetId");
+  useEffect(() => {
+    if (!assetIdParam || !assets?.length) return;
+    const a = assets.find((x: any) => x.id === assetIdParam);
+    if (!a) return;
+    if (a.image_url) setImageUrl(a.image_url);
+    if (a.overlay_headline) setSelectedHeadline(a.overlay_headline);
+    if (a.overlay_subheadline) setSubheadline(a.overlay_subheadline);
+    if (a.cta_text) setCtaText(a.cta_text);
+    if (a.template_name) setTemplate(a.template_name as TemplateKey);
+    if (a.platform) setPlatform(a.platform as PlatformKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assetIdParam, assets]);
 
   const currentPlatform = PLATFORMS.find((p) => p.key === platform)!;
 
