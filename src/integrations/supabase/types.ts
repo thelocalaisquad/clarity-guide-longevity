@@ -349,6 +349,7 @@ export type Database = {
           section_who_is_it_for: string | null
           section_why_different: string | null
           slug: string
+          source_job_id: string | null
           title: string
           updated_at: string
           video_caption: string | null
@@ -387,6 +388,7 @@ export type Database = {
           section_who_is_it_for?: string | null
           section_why_different?: string | null
           slug: string
+          source_job_id?: string | null
           title: string
           updated_at?: string
           video_caption?: string | null
@@ -425,6 +427,7 @@ export type Database = {
           section_who_is_it_for?: string | null
           section_why_different?: string | null
           slug?: string
+          source_job_id?: string | null
           title?: string
           updated_at?: string
           video_caption?: string | null
