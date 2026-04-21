@@ -33,19 +33,52 @@ const websiteJsonLd = {
     "Advanced longevity technology and wellness devices for home use and business operators.",
 };
 
+const withCacheBust = (url: string | null | undefined, stamp?: string) => {
+  if (!url) return "";
+  if (url.includes("?v=") || url.includes("&v=")) return url;
+  const v = stamp ? new Date(stamp).getTime() : Date.now();
+  return `${url}${url.includes("?") ? "&" : "?"}v=${v}`;
+};
+
 const Index = () => {
   const { data: editions, isLoading } = useQuery({
     queryKey: ["editions-feed"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("editions")
-        .select("id, title, slug, category, published_date, author, read_time, meta_description, lead_summary_plain, og_image, edition_number")
+        .select("id, title, slug, category, published_date, author, read_time, meta_description, lead_summary_plain, og_image, edition_number, source_job_id, updated_at")
         .eq("is_published", true)
         .order("published_date", { ascending: false });
       if (error) throw error;
       return data;
     },
   });
+
+  const jobIds = (editions ?? []).map((e) => e.source_job_id).filter(Boolean) as string[];
+
+  const { data: visualsByJob } = useQuery({
+    queryKey: ["editions-feed-visuals", jobIds.sort().join(",")],
+    queryFn: async () => {
+      if (jobIds.length === 0) return {} as Record<string, { image_url: string | null; updated_at: string }>;
+      const { data } = await supabase
+        .from("visual_assets")
+        .select("job_id, image_url, updated_at")
+        .in("job_id", jobIds)
+        .eq("approved", true)
+        .order("updated_at", { ascending: false });
+      const map: Record<string, { image_url: string | null; updated_at: string }> = {};
+      (data ?? []).forEach((v) => {
+        if (v.job_id && !map[v.job_id]) map[v.job_id] = { image_url: v.image_url, updated_at: v.updated_at };
+      });
+      return map;
+    },
+    enabled: jobIds.length > 0,
+  });
+
+  const resolveHero = (e: { source_job_id: string | null; og_image: string | null; updated_at: string }) => {
+    const v = e.source_job_id ? visualsByJob?.[e.source_job_id] : undefined;
+    return withCacheBust(v?.image_url || e.og_image, v?.updated_at || e.updated_at);
+  };
 
   const latest = editions?.[0];
   const older = editions?.slice(1) ?? [];
