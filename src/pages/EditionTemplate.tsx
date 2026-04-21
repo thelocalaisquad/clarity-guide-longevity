@@ -165,10 +165,10 @@ const EditionTemplate = () => {
 
         <EditionByline author={edition.author} date={dateFormatted} dateIso={dateIso} readTime={edition.read_time} />
 
-        {edition.og_image && (
+        {heroImage && (
           <figure className="editorial-narrow pb-8">
             <img
-              src={edition.og_image}
+              src={heroImage}
               alt={edition.title}
               className="w-full h-auto rounded-sm"
               loading="eager"
