@@ -88,8 +88,10 @@ serve(async (req) => {
       if (path) {
         ogImageUrl = `${Deno.env.get("SUPABASE_URL")}/storage/v1/object/public/${path}`;
       } else {
-        ogImageUrl = url;
+        ogImageUrl = url.split("?")[0];
       }
+      // Cache-buster so browsers/CDNs always fetch the latest replaced file
+      ogImageUrl = `${ogImageUrl}?v=${Date.now()}`;
     }
 
     // Get next edition number
